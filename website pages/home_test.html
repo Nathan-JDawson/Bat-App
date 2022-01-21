@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Home Page</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        jQuery(document).ready(() => {
+            $("#button_1").click(() => {
+                console.log("button_1 clicked");
+
+                var array = {
+                    "title": $("#title").val(),
+                    "subtitle": $("#author").val(),
+                    "heading_1": $("#heading_1").val(),
+                    "paragraph_1": $("#paragraph_1").val(),
+                    "caption_1": $("#caption_1").val()
+                };
+
+                $.ajax({
+                    url: "test_1", 
+                    type: "POST",
+                    data: JSON.stringify(array),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success:function(res){
+                        console.log("server response is:", res);
+                    },
+                    error:function(err){
+                        console.error(err);
+                    }
+                });
+            })
+        })
+    </script>
+    </head>
+
+    <body>
+    <h1>Welcome to the Home Page!</h1>
+    <!--
+        Values Needed:
+        title
+        subtitle (Author)
+        heading_1
+        paragraph_1
+        caption_1
+    -->
+    <form>
+        <div class="form-group">
+            <label>Enter title of the report:</label>
+            <input class="form-control" type="text" id="title">
+        </div>
+        <div class="form-group">
+            <label>Enter author:</label>
+            <input class="form-control" type="text" id="author">
+        </div>
+        <div class="form-group">
+            <label>Enter heading 1:</label>
+            <input class="form-control" type="text" id="heading_1">
+        </div>
+        <div class="form-group">
+            <label>Enter paragraph 1:</label>
+            <input class="form-control" type="text" id="paragraph_1">
+        </div>
+        <input type="button" id="button_1" value="Submit"></button>
+    </form>
+    </body>
+</html>

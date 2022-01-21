@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Site Details</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        jQuery(document).ready(() => {
+            $("#button_1").click(() => {
+                console.log("button_1 clicked");
+
+                var array = {
+                    "site_name": $("#site_name").val(),
+                    "address_1": $("#address_line_1").val(),
+                    "address_2": $("#address_line_2").val(),
+                    "town"     : $("#town").val(),
+                    "county"   : $("#county").val(),
+                    "postcode" : $("#postcode").val(),
+                    "grid_ref" : $("#grid").val(),
+                    "dev_size" : $("#size").val(),
+                    "units"    : $("#size_units").val()
+                };
+
+                $.ajax({
+                    url: "test_1", 
+                    type: "POST",
+                    data: JSON.stringify(array),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success:function(res){
+                        console.log("server response is:", res);
+                    },
+                    error:function(err){
+                        console.error(err);
+                    }
+                }).done(() => {
+                    window.location.replace("/client_details")
+                });
+            })
+        })
+    </script>
+    <style>
+        .col-xs-10{
+            padding-left: 11px;
+        }
+        .col-xs-2{
+            padding-right: 11px;
+        }
+        .col-xs-3{
+            padding-right: 0px;
+        }
+        .form-control{
+            padding: 8px;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <h1>Site Details</h1>
+            <!--
+                Values Needed:
+                Site Name
+                Site Address:
+                    Line 1
+                    Line 2
+                    Town
+                    County
+                    Postcode
+                
+                Grid Reference
+                Size
+            -->
+            <form>
+                <div class="form-group">
+                    <label>Site Name:</label>
+                    <input class="form-control" type="text" id="site_name">
+                </div>
+                <div class="form-group">
+                    <label>Site Address:</label>
+                    <div class="form-group row">
+                        <div class="col-xs-2">
+                            <label>Line 1:</label>
+                        </div> 
+                        <div class="col-xs-10">
+                            <input class="form-control form-inline" type="text" id="address_line_1">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2">Line 2:</label>
+                        <div class="col-xs-10">
+                            <input class="form-control form-inline" type="text" id="address_line_2">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2">Town:</label>
+                        <div class="col-xs-10">
+                            <input class="form-control form-inline" type="text" id="town">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2">County:</label>
+                        <div class="col-xs-10">
+                            <input class="form-control form-inline" type="text" id="county">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-xs-2">Postcode:</label>
+                        <div class="col-xs-10">
+                            <input class="form-control form-inline" type="text" id="postcode">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Grid Reference:</label>
+                    <input class="form-control" type="text" id="grid">
+                </div>
+                <div class="form-group">
+                    <label>Development Size (approx.):</label>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <input class="form-control" type="number" id="size">
+                        </div>
+                        <div class="col-xs-2">
+                            <select class="form-control" id="size_units">
+                                <option>ha</option>
+                                <option>m&#x00B2;</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="button" id="button_1" value="Submit"></button>
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Client Details</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        jQuery(document).ready(() => {
+            $("#commissioners_details").hide()
+
+            $("#button_1").click(() => {
+                console.log("button_1 clicked");
+
+                var array = {
+                    "client_name"     : $("#name").val(),
+                    "client_address_1": $("#address_line_1").val(),
+                    "client_address_2": $("#address_line_2").val(),
+                    "client_town"     : $("#town").val(),
+                    "client_county"   : $("#county").val(),
+                    "client_postcode" : $("#postcode").val()
+                };
+
+                if($("#yes").is(":checked")){
+                    array["comiss_name"]      = $("#comiss_name").val();
+                    array["comiss_address_1"] = $("#comiss_address_line_1").val();
+                    array["comiss_address_2"] = $("#comiss_address_line_2").val();
+                    array["comiss_town"]      = $("#comiss_town").val();
+                    array["comiss_county"]    = $("#comiss_county").val();
+                    array["comiss_postcode"]  = $("#comiss_postcode").val();
+                }
+
+                $.ajax({
+                    url: "test_1", 
+                    type: "POST",
+                    data: JSON.stringify(array),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success:function(res){
+                        console.log("server response is:", res);
+                    },
+                    error:function(err){
+                        console.error(err);
+                    }
+                }).done(() => {
+                    window.location.replace("/client_details")
+                });
+            })
+
+            // if yes is checked for commissioning body
+            $("input[name='commission']").change(() => {
+                if($("#yes").is(":checked")){
+                    $("#commissioners_details").show()
+                }else{
+                    $("#commissioners_details").hide()
+                }
+            })
+            
+        })
+    </script>
+    <style>
+        .col-xs-10{
+            padding-left: 11px;
+        }
+        .col-xs-2{
+            padding-right: 11px;
+        }
+        .col-xs-3{
+            padding-right: 0px;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <h1>Client Details</h1>
+            <!--
+                Values Needed:
+                Commision Date
+                Client/Company Name
+                Address:
+                    Line 1
+                    Line 2
+                    Line 3
+                    County
+                    Postcode
+                
+                (Optional) Commissioning Body
+                Commissioners Name/Company
+                Address: (same as site address?)
+                    Line 1
+                    Line 2
+                    Line 3
+                    County
+                    Postcode
+
+            -->
+            <form>
+                <div id="client_details">
+                    <div class="form-group">
+                        <label>Name of Client/Company</label>
+                        <input type="text" id="name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Client Address:</label>
+                        <div class="form-group row">
+                            <div class="col-xs-2">
+                                <label>Line 1:</label>
+                            </div> 
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="address_line_1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-2">Line 2:</label>
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="address_line_2">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-2">Town:</label>
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="town">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-2">County:</label>
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="county">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-2">Postcode:</label>
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="postcode">
+                            </div>
+                        </div>
+                        <label>Is there a Commissioning Body?</label>
+                        <div class="radio">
+                            <label><input type="radio" id="yes" name="commission">Yes</label>
+                            <label><input type="radio" id="no" name="commission" checked>No</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="commissioners_details">
+                    <div class="form-group">
+                        <label>Name of Commissioners/Commissioning Company</label>
+                        <input type="text" id="comiss_name" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Commissioners Address:</label>
+                        <div class="form-group row">
+                            <div class="col-xs-2">
+                                <label>Line 1:</label>
+                            </div> 
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="comiss_address_line_1">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-2">Line 2:</label>
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="comiss_address_line_2">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-2">Town:</label>
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="comiss_town">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-2">County:</label>
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="comiss_county">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xs-2">Postcode:</label>
+                            <div class="col-xs-10">
+                                <input class="form-control form-inline" type="text" id="comiss_postcode">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="button" id="button_1" value="Submit"></button>
+            </form>
+        </div>
+    </body>
+</html>
