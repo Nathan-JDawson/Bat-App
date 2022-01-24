@@ -103,5 +103,9 @@ dist
 # TernJS port file
 .tern-port
 
-# Excel sheet that is kept in the same folder
-*.xlsx
+# Office files that is kept in the same folder
+**/*.xlsx
+**/*.dotx
+
+# JSON files
+**/*.json

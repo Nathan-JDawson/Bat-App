@@ -5,24 +5,33 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script>
         jQuery(document).ready(() => {
-            $("#button_1").click(() => {
-                console.log("button_1 clicked");
+            // need to use function here rather than => as 'this' is used
+            $(":button").click(function(){
+                send_data();
+                if($(this).attr("id") === "button_1"){
+                    window.location.replace("/client_details")
+                }else if($(this).attr("id") === "button_2"){
+                    generate_report();
+                }
+            })
 
-                var array = {
+            // will post the data to the server to store in a JSON file
+            const send_data = () => {
+                let array = {
                     "site_name": $("#site_name").val(),
-                    "address_1": $("#address_line_1").val(),
-                    "address_2": $("#address_line_2").val(),
-                    "town"     : $("#town").val(),
-                    "county"   : $("#county").val(),
-                    "postcode" : $("#postcode").val(),
+                    "site_address"  : $("#address_line_1").val(),
                     "grid_ref" : $("#grid").val(),
                     "dev_size" : $("#size").val(),
                     "units"    : $("#size_units").val()
                 };
+
+                if($("#address_line_2").val())
+                    array["site_address"] += ", " + $("#address_line_2").val();
+
+                array["site_address"] += ", " + $("#town").val() + ", " + $("#county").val() + ", " + $("#postcode").val();
 
                 $.ajax({
                     url: "test_1", 
@@ -30,16 +39,36 @@
                     data: JSON.stringify(array),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    success:function(res){
+                    success:(res) => {
                         console.log("server response is:", res);
                     },
-                    error:function(err){
+                    error:(err) => {
                         console.error(err);
                     }
-                }).done(() => {
-                    window.location.replace("/client_details")
                 });
-            })
+            }
+
+            // will post the data and then generate the report
+            const generate_report =  () => {
+                $.ajax({
+                    url: "test_2",
+                    type: "GET",
+                    success:(res) =>{
+                        console.log("server response is:", res)
+                    },
+                    error:(err) => {
+                        console.error(err);
+                    }
+                })
+            }
+
+            // add space in grid reference after 4 numbers
+            $("#grid").on("keyup", function() {
+                let text = $(this).val().split(" ").join("");
+                if(text.length > 0)
+                    text = text.match(new RegExp('.{1,4}', 'g')).join(" ");
+                $(this).val(text); 
+            });
         })
     </script>
     <style>
@@ -132,8 +161,14 @@
                         </div>
                     </div>
                 </div>
-                <input type="button" id="button_1" value="Submit"></button>
+                <input type="button" id="button_1" value="Submit and Next Section"></button>
             </form>
+            <br>
+            <div class="row">
+                <div class="col-xs-8">
+                    <button type="button" id="button_2">Submit and Generate Report</button>
+                </div>
+            </div>
         </div>
     </body>
 </html>

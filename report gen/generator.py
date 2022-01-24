@@ -1,7 +1,5 @@
-import sys
 from typing import List, Dict
-from docxtpl import DocxTemplate
-import random
+from docxtpl import DocxTemplate # type: ignore
 import json
 
 def open_json(filename):
@@ -12,27 +10,20 @@ def open_json(filename):
     return data
 
 if __name__ == "__main__":
-    json_data = open_json("data.json")
+    # will need to be able to take an argument for the filename
+
+    # file path is from the node server folder, as that is where the process is called
+    json_data = open_json("../node server/data.json")
 
     # import the template doc
-    template = DocxTemplate("report_template.docx")
+    template = DocxTemplate("../report gen/simply_ecology_template.docx")
 
-    table_contents: List[Dict[str, int]] = []
+    try:
+        # render new doc
+        template.render(json_data)
+        template.save("../report gen/generated_report_test.docx")
 
-    # generate random values for the table
-    for i in range(10):
-        features = {}
-        for j in range(1,6):
-            number = random.randint(0, 100)
-            features["Feature_" + str(j)] = number
-        # endfor
-        table_contents.append(features)
-    # endfor
-
-    json_data["table_1"] = table_contents
-
-    print(json_data)
-
-    # render new doc
-    template.render(json_data)
-    template.save("generated_report_test.docx")
+        print("generated successfully")
+    except Exception as e:
+        print("error: ", e)
+    
