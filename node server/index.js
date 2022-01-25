@@ -20,7 +20,7 @@ app.post("/test_1", (req, res) => {
         if(fs.existsSync("data.json")){
             let file_raw = fs.readFileSync("data.json");
             let file = JSON.parse(file_raw);
-            let new_json = { file, json };
+            let new_json = { ...file , ...json };
             fs.writeFileSync("data.json", JSON.stringify(new_json));
         }else{
             fs.writeFileSync("data.json", JSON.stringify(json));
@@ -28,7 +28,7 @@ app.post("/test_1", (req, res) => {
         res.send(JSON.stringify("Data stored successfully"))
     }catch(err){
         console.log(err);
-        res.send(err);
+        res.send(JSON.stringify(err));
     }
 })
 
@@ -61,9 +61,8 @@ app.get("/test_2", (req, res) => {
 
 const display_html = (filename, req, res) => {
     fs.readFile((filename), (err, html) => {
-        if(err){
-            throw err;
-        }
+        if(err) throw err;
+        res.writeHead(200, {"Content-Type": "text/html"});
         res.write(html);
         res.end()
     })
@@ -78,6 +77,15 @@ app.get("/client_details", (req, res) => {
 app.get("/", (req, res) => {
     // display html to user
     display_html("../website pages/site_details.html", req, res)
+})
+
+app.get("/functions.js", (req, res) => {
+    fs.readFile("../website pages/functions.js", (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, {"Content-Type": "text/javascript"});
+        res.write(data);
+        res.end()
+    })
 })
 
 app.listen(port, () => console.log("Server listening on port:", port))

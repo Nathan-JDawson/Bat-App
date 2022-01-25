@@ -8,11 +8,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="/functions.js" type="text/javascript"></script>
     <script>
         jQuery(document).ready(() => {
             // set up validation for the form - uses jQuery Validate plugin
             $("#site_form").validate({
-                debug: true,
+                debug: false,
                 rules: {
                     name        : "required",
                     line_1      : "required",
@@ -40,18 +41,18 @@
             // need to use function here rather than => as 'this' is used
             $(":button").click(function(){
                 if($("#site_form").valid()){
-                    send_data();
+                    array = generate_array();
+                    send_data(array);
                     if($(this).attr("id") === "button_1"){
                         window.location.replace("/client_details")
                     }else if($(this).attr("id") === "button_2"){
                         generate_report();
                     }
                 }
-                
             })
 
-            // will post the data to the server to store in a JSON file
-            const send_data = () => {
+            // captures the form into an array/object
+            const generate_array = () => {
                 let array = {
                     "site_name"     : $("#site_name").val(),
                     "site_address"  : $("#address_line_1").val(),
@@ -63,35 +64,11 @@
                 if($("#address_line_2").val())
                     array["site_address"] += ", " + $("#address_line_2").val();
 
-                array["site_address"] += ", " + $("#town").val() + ", " + $("#county").val() + ", " + $("#postcode").val().toUpperCase();
+                array["site_address"] += ", " + $("#town").val() 
+                                       + ", " + $("#county").val() 
+                                       + ", " + $("#postcode").val().toUpperCase();
 
-                $.ajax({
-                    url: "test_1", 
-                    type: "POST",
-                    data: JSON.stringify(array),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success:(res) => {
-                        console.log("server response is:", res);
-                    },
-                    error:(err) => {
-                        console.error(err);
-                    }
-                });
-            }
-
-            // generate the report
-            const generate_report =  () => {
-                $.ajax({
-                    url: "test_2",
-                    type: "GET",
-                    success:(res) =>{
-                        console.log("server response is:", res)
-                    },
-                    error:(err) => {
-                        console.error(err);
-                    }
-                })
+                return array;
             }
 
             // add space in grid reference after 4 numbers
@@ -101,7 +78,7 @@
                     text = text.match(new RegExp('.{1,4}', 'g')).join(" ");
                 $(this).val(text); 
             });
-        })
+        });
     </script>
     <style>
         .col-xs-10{
@@ -202,12 +179,6 @@
                     </div>
                 </div>
             </form>
-            <br>
-            <div class="row">
-                <div class="col-xs-8">
-                    
-                </div>
-            </div>
         </div>
     </body>
 </html>

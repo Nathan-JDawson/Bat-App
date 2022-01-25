@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     try:
         # render new doc
-        template.render(json_data)
+        template.render(json_data, autoescape=True)
         template.save("../report gen/generated_report_test.docx")
 
         print("generated successfully")

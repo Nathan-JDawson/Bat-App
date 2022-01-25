@@ -6,48 +6,52 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="functions.js"></script>
     <script>
         jQuery(document).ready(() => {
             $("#commissioners_details").hide()
 
-            $("#button_1").click(() => {
-                console.log("button_1 clicked");
-
+            // need to use function here rather than => as 'this' is used
+            $(":button").click(function(){
+                //if($("#site_form").valid()){
+                    array = generate_array();
+                    send_data(array);
+                    if($(this).attr("id") === "button_1"){
+                        window.location.replace("/client_details")
+                    }else if($(this).attr("id") === "button_2"){
+                        generate_report();
+                    }
+                //}
+            })
+            
+            const generate_array = () => {
                 var array = {
-                    "client_name"     : $("#name").val(),
-                    "client_address_1": $("#address_line_1").val(),
-                    "client_address_2": $("#address_line_2").val(),
-                    "client_town"     : $("#town").val(),
-                    "client_county"   : $("#county").val(),
-                    "client_postcode" : $("#postcode").val()
+                    "client_name"   : $("#name").val(),
+                    "client_address": $("#address_line_1").val(),
                 };
 
+                if($("#address_line_2").val())
+                    array["client_address"] += ", " + $("#address_line_2").val();
+
+                array["client_address"] += ", " + $("#town").val() 
+                                         + ", " + $("#county").val() 
+                                         + ", " + $("#postcode").val().toUpperCase();
+
+                // section will only run if 'yes' for commissioning body
                 if($("#yes").is(":checked")){
                     array["comiss_name"]      = $("#comiss_name").val();
-                    array["comiss_address_1"] = $("#comiss_address_line_1").val();
-                    array["comiss_address_2"] = $("#comiss_address_line_2").val();
-                    array["comiss_town"]      = $("#comiss_town").val();
-                    array["comiss_county"]    = $("#comiss_county").val();
-                    array["comiss_postcode"]  = $("#comiss_postcode").val();
+                    array["comiss_address"]  += $("#comiss_address_line_1").val();
+                    if($("#address_line_2")) array["comiss_address"]  += $("#comiss_address_line_2").val();
+                    array["comiss_address"]  += $("#comiss_town").val();
+                    array["comiss_address"]  += $("#comiss_county").val();
+                    array["comiss_address"]  += $("#comiss_postcode").val();
                 }
 
-                $.ajax({
-                    url: "test_1", 
-                    type: "POST",
-                    data: JSON.stringify(array),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success:function(res){
-                        console.log("server response is:", res);
-                    },
-                    error:function(err){
-                        console.error(err);
-                    }
-                }).done(() => {
-                    window.location.replace("/client_details")
-                });
-            })
+                return array;
+            }
 
             // if yes is checked for commissioning body
             $("input[name='commission']").change(() => {
@@ -57,7 +61,6 @@
                     $("#commissioners_details").hide()
                 }
             })
-            
         })
     </script>
     <style>
@@ -185,7 +188,14 @@
                         </div>
                     </div>
                 </div>
-                <input type="button" id="button_1" value="Submit"></button>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <input type="button" id="button_1" value="Submit and Next Section"></input>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="button" id="button_2" value="Submit and Generate Report"></input>
+                    </div>
+                </div>
             </form>
         </div>
     </body>
