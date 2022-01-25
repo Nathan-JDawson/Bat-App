@@ -106,6 +106,7 @@ dist
 # Office files that is kept in the same folder
 **/*.xlsx
 **/*.dotx
+generated_report_test.docx
 
 # JSON files
 **/*.json

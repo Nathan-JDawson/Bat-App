@@ -5,33 +5,65 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script>
         jQuery(document).ready(() => {
+            // set up validation for the form - uses jQuery Validate plugin
+            $("#site_form").validate({
+                debug: true,
+                rules: {
+                    name        : "required",
+                    line_1      : "required",
+                    town        : "required",
+                    county      : "required",
+                    postcode: {
+                        required: true,
+                        postcodeUK: true
+                    },
+                    grid: {
+                        required    : true,
+                        minlength   : 9,
+                        maxlength   : 9
+                    },
+                    size        : "required"
+                },
+                messages: {
+                    grid: {
+                        minlength: "Must be 8 numbers long",
+                        maxlength: "Must be 8 numbers long"
+                    }
+                }
+            })
+
             // need to use function here rather than => as 'this' is used
             $(":button").click(function(){
-                send_data();
-                if($(this).attr("id") === "button_1"){
-                    window.location.replace("/client_details")
-                }else if($(this).attr("id") === "button_2"){
-                    generate_report();
+                if($("#site_form").valid()){
+                    send_data();
+                    if($(this).attr("id") === "button_1"){
+                        window.location.replace("/client_details")
+                    }else if($(this).attr("id") === "button_2"){
+                        generate_report();
+                    }
                 }
+                
             })
 
             // will post the data to the server to store in a JSON file
             const send_data = () => {
                 let array = {
-                    "site_name": $("#site_name").val(),
+                    "site_name"     : $("#site_name").val(),
                     "site_address"  : $("#address_line_1").val(),
-                    "grid_ref" : $("#grid").val(),
-                    "dev_size" : $("#size").val(),
-                    "units"    : $("#size_units").val()
+                    "grid_ref"      : $("#grid").val(),
+                    "dev_size"      : $("#size").val(),
+                    "units"         : $("#size_units").val()
                 };
 
                 if($("#address_line_2").val())
                     array["site_address"] += ", " + $("#address_line_2").val();
 
-                array["site_address"] += ", " + $("#town").val() + ", " + $("#county").val() + ", " + $("#postcode").val();
+                array["site_address"] += ", " + $("#town").val() + ", " + $("#county").val() + ", " + $("#postcode").val().toUpperCase();
 
                 $.ajax({
                     url: "test_1", 
@@ -48,7 +80,7 @@
                 });
             }
 
-            // will post the data and then generate the report
+            // generate the report
             const generate_report =  () => {
                 $.ajax({
                     url: "test_2",
@@ -103,10 +135,10 @@
                 Grid Reference
                 Size
             -->
-            <form>
+            <form id="site_form" action="">
                 <div class="form-group">
                     <label>Site Name:</label>
-                    <input class="form-control" type="text" id="site_name">
+                    <input class="form-control" type="text" id="site_name" name="name">
                 </div>
                 <div class="form-group">
                     <label>Site Address:</label>
@@ -115,58 +147,65 @@
                             <label>Line 1:</label>
                         </div> 
                         <div class="col-xs-10">
-                            <input class="form-control form-inline" type="text" id="address_line_1">
+                            <input class="form-control form-inline" type="text" id="address_line_1" name="line_1">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-xs-2">Line 2:</label>
                         <div class="col-xs-10">
-                            <input class="form-control form-inline" type="text" id="address_line_2">
+                            <input class="form-control form-inline" type="text" id="address_line_2" name="line_2">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-xs-2">Town:</label>
                         <div class="col-xs-10">
-                            <input class="form-control form-inline" type="text" id="town">
+                            <input class="form-control form-inline" type="text" id="town" name="town">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-xs-2">County:</label>
                         <div class="col-xs-10">
-                            <input class="form-control form-inline" type="text" id="county">
+                            <input class="form-control form-inline" type="text" id="county" name="county">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-xs-2">Postcode:</label>
                         <div class="col-xs-10">
-                            <input class="form-control form-inline" type="text" id="postcode">
+                            <input class="form-control form-inline" type="text" id="postcode" name="postcode">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Grid Reference:</label>
-                    <input class="form-control" type="text" id="grid">
+                    <input class="form-control" type="text" id="grid" name="grid">
                 </div>
                 <div class="form-group">
                     <label>Development Size (approx.):</label>
                     <div class="row">
                         <div class="col-xs-3">
-                            <input class="form-control" type="number" id="size">
+                            <input class="form-control" type="number" id="size" step=".001" name="size">
                         </div>
                         <div class="col-xs-2">
-                            <select class="form-control" id="size_units">
+                            <select class="form-control" id="size_units" name="units">
                                 <option>ha</option>
                                 <option>m&#x00B2;</option>
                             </select>
                         </div>
                     </div>
                 </div>
-                <input type="button" id="button_1" value="Submit and Next Section"></button>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <input type="button" id="button_1" value="Submit and Next Section"></input>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="button" id="button_2" value="Submit and Generate Report"></input>
+                    </div>
+                </div>
             </form>
             <br>
             <div class="row">
                 <div class="col-xs-8">
-                    <button type="button" id="button_2">Submit and Generate Report</button>
+                    
                 </div>
             </div>
         </div>
