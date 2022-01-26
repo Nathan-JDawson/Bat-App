@@ -4,31 +4,60 @@
     <title>Client Details</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript" src="functions.js"></script>
     <script>
         jQuery(document).ready(() => {
             $("#commissioners_details").hide()
 
+            $("#client_form").validate({
+                debug: true,
+                rules: {
+                    name    : "required",
+                    line_1  : "required",
+                    town    : "required",
+                    county  : "required",
+                    postcode: {
+                        required    : true,
+                        postcodeUK  : true
+                    },
+                    date    : "required" 
+                }
+            })
+
             // need to use function here rather than => as 'this' is used
             $(":button").click(function(){
-                //if($("#site_form").valid()){
+                if($("#client_form").valid()){
                     array = generate_array();
                     send_data(array);
                     if($(this).attr("id") === "button_1"){
-                        window.location.replace("/client_details")
+                        window.location.replace("/project_proposals")
                     }else if($(this).attr("id") === "button_2"){
                         generate_report();
                     }
-                //}
+                }
+            })
+
+            $(".datepicker").datepicker({
+                format      : "yyyy-mm",
+                startView   : "years",
+                minViewMode : "months"
             })
             
             const generate_array = () => {
+                // generate date - just month year
+                let dt = new Date($("#date").val());
+                let month = dt.toLocaleString("default", { month: "long"});
+                let year = dt.getFullYear();
+
                 var array = {
+                    "comiss_date"   : month + " " + year,
                     "client_name"   : $("#name").val(),
                     "client_address": $("#address_line_1").val(),
                 };
@@ -56,11 +85,32 @@
             // if yes is checked for commissioning body
             $("input[name='commission']").change(() => {
                 if($("#yes").is(":checked")){
-                    $("#commissioners_details").show()
+                    $("#commissioners_details").show();
+                    add_rules();
                 }else{
-                    $("#commissioners_details").hide()
+                    $("#commissioners_details").hide();
+                    remove_rules();
                 }
             })
+
+            const add_rules = () => {
+                $("#comiss_name").rules("add", "required");
+                $("#comiss_address_line_1").rules("add", "required");
+                $("#comiss_town").rules("add", "required");
+                $("#comiss_county").rules("add", "required");
+                $("#comiss_postcode").rules("add", {
+                    required    : true,
+                    postcodeUK  : true
+                })
+            }
+
+            const remove_rules = () => {
+                $("#comiss_name").rules("remove");
+                $("#comiss_address_line_1").rules("remove");
+                $("#comiss_town").rules("remove");
+                $("#comiss_county").rules("remove");
+                $("#comiss_postcode").rules("remove"); 
+            }
         })
     </script>
     <style>
@@ -100,44 +150,48 @@
                     Postcode
 
             -->
-            <form>
+            <form id="client_form">
                 <div id="client_details">
                     <div class="form-group">
-                        <label>Name of Client/Company</label>
-                        <input type="text" id="name" class="form-control">
+                        <label>Date of Commission:</label>
+                        <input class="col-xs-4 datepicker form-control" type="text" id="date" name="date">
                     </div>
                     <div class="form-group">
+                        <label>Name of Client/Company:</label>
+                        <input type="text" id="name" class="form-control" name="name">
+                    </div>
+                    <div class="form-group" >
                         <label>Client Address:</label>
                         <div class="form-group row">
                             <div class="col-xs-2">
                                 <label>Line 1:</label>
                             </div> 
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="address_line_1">
+                                <input class="form-control form-inline" type="text" id="address_line_1" name="line_1">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-xs-2">Line 2:</label>
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="address_line_2">
+                                <input class="form-control form-inline" type="text" id="address_line_2" name="line_2">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-xs-2">Town:</label>
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="town">
+                                <input class="form-control form-inline" type="text" id="town" name="town">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-xs-2">County:</label>
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="county">
+                                <input class="form-control form-inline" type="text" id="county" name="county">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-xs-2">Postcode:</label>
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="postcode">
+                                <input class="form-control form-inline" type="text" id="postcode" name="postcode">
                             </div>
                         </div>
                         <label>Is there a Commissioning Body?</label>
@@ -150,7 +204,7 @@
                 <div id="commissioners_details">
                     <div class="form-group">
                         <label>Name of Commissioners/Commissioning Company</label>
-                        <input type="text" id="comiss_name" class="form-control">
+                        <input type="text" id="comiss_name" class="form-control" name="comiss_name">
                     </div>
                     <div class="form-group">
                         <label>Commissioners Address:</label>
@@ -159,31 +213,31 @@
                                 <label>Line 1:</label>
                             </div> 
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="comiss_address_line_1">
+                                <input class="form-control form-inline" type="text" id="comiss_address_line_1" name="comiss_line_1">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-xs-2">Line 2:</label>
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="comiss_address_line_2">
+                                <input class="form-control form-inline" type="text" id="comiss_address_line_2" name="comiss_line_2">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-xs-2">Town:</label>
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="comiss_town">
+                                <input class="form-control form-inline" type="text" id="comiss_town" name="comiss_town">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-xs-2">County:</label>
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="comiss_county">
+                                <input class="form-control form-inline" type="text" id="comiss_county" name="comiss_county">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-xs-2">Postcode:</label>
                             <div class="col-xs-10">
-                                <input class="form-control form-inline" type="text" id="comiss_postcode">
+                                <input class="form-control form-inline" type="text" id="comiss_postcode" name="comiss_postcode">
                             </div>
                         </div>
                     </div>

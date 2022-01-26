@@ -68,6 +68,11 @@ const display_html = (filename, req, res) => {
     })
 }; 
 
+app.get("/project_proposals", (req, res) => {
+    // display html to user
+    display_html("../website pages/project_proposals.html", req, res)
+})
+
 app.get("/client_details", (req, res) => {
     // display html to user
     display_html("../website pages/client_details.html", req, res)

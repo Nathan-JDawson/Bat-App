@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Project Proposals</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="functions.js"></script>
+    <script>
+        jQuery(document).ready(() => {
+            $("#proposal_form").validate({
+                debug: true,
+                rules: {
+                   
+                }
+            })
+
+            // need to use function here rather than => as 'this' is used
+            $(":button").click(function(){
+                if($("#proposal_form").valid()){
+                    array = generate_array();
+                    send_data(array);
+                    if($(this).attr("id") === "button_1"){
+                        window.location.replace("/client_details")
+                    }else if($(this).attr("id") === "button_2"){
+                        generate_report();
+                    }
+                }
+            })
+            
+            const generate_array = () => {
+                var array = {
+                    "proposals": $("#proposals").val()
+                }
+
+                return array;
+            }
+        })
+    </script>
+    <style>
+        .col-xs-10{
+            padding-left: 11px;
+        }
+        .col-xs-2{
+            padding-right: 11px;
+        }
+        .col-xs-3{
+            padding-right: 0px;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <h1>Project Proposals</h1>
+            <!--
+                Values Needed:
+                Development Proposals
+                Plan of Developments
+
+            -->
+            <form id="proposal_form">
+                <div class="form-group">
+                    <label>Development Proposals:</label>
+                    <p>The surveys described in this report were commissed to inform...</p>
+                    <textarea class="form-control" id="proposals" rows=5 name="proposals"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <input type="button" id="button_1" value="Submit and Next Section"></input>
+                    </div>
+                    <div class="col-xs-6">
+                        <input type="button" id="button_2" value="Submit and Generate Report"></input>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
