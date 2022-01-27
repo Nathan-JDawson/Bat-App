@@ -15,21 +15,27 @@
     <script>
         jQuery(document).ready(() => {
             $("#proposal_form").validate({
-                debug: true,
+                debug: false,
                 rules: {
-                   
+                   proposals: {
+                       required: true
+                   }
                 }
             })
 
             // need to use function here rather than => as 'this' is used
             $(":button").click(function(){
-                if($("#proposal_form").valid()){
-                    array = generate_array();
-                    send_data(array);
-                    if($(this).attr("id") === "button_1"){
-                        window.location.replace("/client_details")
-                    }else if($(this).attr("id") === "button_2"){
-                        generate_report();
+                if($(this).attr("id") == "upload"){
+                    // implement uploading image
+                }else{
+                    if($("#proposal_form").valid()){
+                        array = generate_array();
+                        send_data(array);
+                        if($(this).attr("id") === "button_1"){
+                            window.location.replace("/client_details")
+                        }else if($(this).attr("id") === "button_2"){
+                            generate_report();
+                        }
                     }
                 }
             })
@@ -71,12 +77,17 @@
                     <p>The surveys described in this report were commissed to inform...</p>
                     <textarea class="form-control" id="proposals" rows=5 name="proposals"></textarea>
                 </div>
+                <div class="form-group">
+                    <button type="button" class="btn" id="upload">
+                        <span class="glyphicon glyphicon-upload"></span> Upload Plan
+                    </button>
+                </div>
                 <div class="row">
                     <div class="col-xs-6">
-                        <input type="button" id="button_1" value="Submit and Next Section"></input>
+                        <input class="btn btn-default" type="button" id="button_1" value="Submit and Next Section"></input>
                     </div>
                     <div class="col-xs-6">
-                        <input type="button" id="button_2" value="Submit and Generate Report"></input>
+                        <input class="btn btn-default" type="button" id="button_2" value="Submit and Generate Report"></input>
                     </div>
                 </div>
             </form>

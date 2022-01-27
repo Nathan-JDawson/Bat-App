@@ -5,12 +5,13 @@ const app = express()
 const port = 3000
 const bodyParser = require("body-parser")
 const favicon = require('serve-favicon')
+const compress_images = require("compress-images")
 
 app.use(bodyParser.json())
 app.use(favicon("favicon.ico"))
 
 // used to add data to the json file
-app.post("/test_1", (req, res) => {
+app.post("/store_data", (req, res) => {
     let json = req.body;
     console.log(json);
 
@@ -33,7 +34,7 @@ app.post("/test_1", (req, res) => {
 })
 
 // used to generate the report
-app.get("/test_2", (req, res) => {
+app.get("/gen_report", (req, res) => {
     let data_to_send;
 
     // new child process to run the python script
@@ -57,6 +58,27 @@ app.get("/test_2", (req, res) => {
         // must be sent back as JSON
         res.send(JSON.stringify(data_to_send))
     });
+})
+
+// image compression when uploading a file
+app.get("/compress_image", (req, res) => {
+    let filepath = req.body;
+    let output = "../report gen/img";
+    
+    compress_images(filepath, output, {compress_force: true, statistics: true, autoupdate: true},
+        false,
+        {jpeg: {engine: "mozjpeg", command: ["-quality", '70']}},
+        {png: {engine: false, command: false}},
+        {scg: {engine: false, commmand: false}},
+        {gif: {engine: false, commmand: false}},
+        (err, statistics) => {
+            if (err) throw err;
+            console.log(statistics)
+        }
+    )
+
+    res.send(JSON.stringify("Image compressed"));
+    res.end()
 })
 
 const display_html = (filename, req, res) => {

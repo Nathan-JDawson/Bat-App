@@ -1,10 +1,7 @@
-let header = new Headers();
-header.append("Content-Type", "text/jacascript");
-
 // triggers the report generation program
 const generate_report = () => {
     $.ajax({
-        url: "test_2",
+        url: "gen_report",
         type: "GET",
         success:(res) =>{
             console.log("server response is:", res)
@@ -18,7 +15,7 @@ const generate_report = () => {
 // sends the data to the server to be posted
 const send_data = (array) => {
     $.ajax({
-        url: "test_1", 
+        url: "store_data", 
         type: "POST",
         data: JSON.stringify(array),
         contentType: "application/json; charset=utf-8",
