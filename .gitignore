@@ -110,3 +110,7 @@ generated_report_test.docx
 
 # JSON files
 **/*.json
+
+# images folders
+temp/
+img/

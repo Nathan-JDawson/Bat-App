@@ -25,12 +25,14 @@
 
             // need to use function here rather than => as 'this' is used
             $(":button").click(function(){
-                if($(this).attr("id") == "upload"){
-                    // implement uploading image
+                if($(this).attr("id") == "clear"){
+                    // clear file input
+                    $("#upload").val(null);
                 }else{
                     if($("#proposal_form").valid()){
                         array = generate_array();
                         send_data(array);
+                        send_image();
                         if($(this).attr("id") === "button_1"){
                             window.location.replace("/client_details")
                         }else if($(this).attr("id") === "button_2"){
@@ -46,6 +48,24 @@
                 }
 
                 return array;
+            }
+
+            const send_image = () => {
+                let fd = new FormData(), file = document.getElementById("upload").files[0];
+                fd.append("upload", file)
+                $.ajax({
+                    type: "POST",
+                    url: "compress_image",
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success:function(data){
+                        console.log(data)
+                    },
+                    error:function(err){
+                        console.error(err)
+                    }
+                });
             }
         })
     </script>
@@ -77,10 +97,14 @@
                     <p>The surveys described in this report were commissed to inform...</p>
                     <textarea class="form-control" id="proposals" rows=5 name="proposals"></textarea>
                 </div>
-                <div class="form-group">
-                    <button type="button" class="btn" id="upload">
-                        <span class="glyphicon glyphicon-upload"></span> Upload Plan
-                    </button>
+                <label for="upload">Upload Plan</label>
+                <div class="form-group row">
+                    <input type="file" class="col-xs-6 control-file" id="upload" name="upload">
+                    <span>
+                        <button class="col-xs-2 btn btn-danger" id="clear" name="clear">Clear 
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </span>
                 </div>
                 <div class="row">
                     <div class="col-xs-6">

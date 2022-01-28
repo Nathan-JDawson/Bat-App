@@ -4,8 +4,10 @@ const fs = require("fs");
 const app = express()
 const port = 3000
 const bodyParser = require("body-parser")
+const multer = require("multer")
 const favicon = require('serve-favicon')
-const compress_images = require("compress-images")
+const sharp = require("sharp");
+const path = require("path");
 
 app.use(bodyParser.json())
 app.use(favicon("favicon.ico"))
@@ -60,25 +62,26 @@ app.get("/gen_report", (req, res) => {
     });
 })
 
-// image compression when uploading a file
-app.get("/compress_image", (req, res) => {
-    let filepath = req.body;
-    let output = "../report gen/img";
-    
-    compress_images(filepath, output, {compress_force: true, statistics: true, autoupdate: true},
-        false,
-        {jpeg: {engine: "mozjpeg", command: ["-quality", '70']}},
-        {png: {engine: false, command: false}},
-        {scg: {engine: false, commmand: false}},
-        {gif: {engine: false, commmand: false}},
-        (err, statistics) => {
-            if (err) throw err;
-            console.log(statistics)
-        }
-    )
+const upload = multer({
+    dest: "temp/"
+});
 
-    res.send(JSON.stringify("Image compressed"));
-    res.end()
+// image compression when uploading a file
+app.post("/compress_image", upload.single("upload"), (req, res) => {
+    let filepath = req.file.path;
+    let output = "../report gen/img/image.jpeg";
+    
+    sharp(filepath)
+    .jpeg({ mozjpeg: true, quality: 40 })
+    .toFile(output)
+    .then(() => {
+        res.send("image compressed")
+        res.end();
+    })
+    .catch((err) => {
+        res.send(err)
+        res.end()
+    })
 })
 
 const display_html = (filename, req, res) => {
