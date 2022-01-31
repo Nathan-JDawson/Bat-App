@@ -76,13 +76,26 @@ app.post("/compress_image", upload.single("upload"), (req, res) => {
     .toFile(output)
     .then(() => {
         res.send("image compressed")
-        res.end();
     })
     .catch((err) => {
         res.send(err)
-        res.end()
-    })
+    });
+    res.end()
 })
+
+const clear_temp = () => {
+    let folder = "temp";
+
+    fs.readdir(folder, (err1, files) => {
+        if (err1) throw err1;
+
+        for(const file of files){
+            fs.unlink(path.join(folder, file), err2 => {
+                if (err2) throw err2;
+            });
+        }
+    });
+}
 
 const display_html = (filename, req, res) => {
     fs.readFile((filename), (err, html) => {
@@ -117,5 +130,8 @@ app.get("/functions.js", (req, res) => {
         res.end()
     })
 })
+
+// clear the temp image folder on server start
+clear_temp();
 
 app.listen(port, () => console.log("Server listening on port:", port))
