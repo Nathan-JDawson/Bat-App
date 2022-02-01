@@ -24,7 +24,7 @@ app.post("/store_data", (req, res) => {
             let file_raw = fs.readFileSync("data.json");
             let file = JSON.parse(file_raw);
             let new_json = { ...file , ...json };
-            fs.writeFileSync("data.json", JSON.stringify(new_json));
+            fs.writeFileSync("data.json", JSON.stringify(new_json), { mode: 777});
         }else{
             fs.writeFileSync("data.json", JSON.stringify(json));
         }
