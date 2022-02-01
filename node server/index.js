@@ -131,6 +131,15 @@ app.get("/functions.js", (req, res) => {
     })
 })
 
+app.get("/stylesheet.css", (req, res) => {
+    fs.readFile("../website pages/stylesheet.css", (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, {"Content-Type": "text/css"});
+        res.write(data);
+        res.end();
+    })
+})
+
 // clear the temp image folder on server start
 clear_temp();
 

@@ -1,0 +1,24 @@
+.col-sm-10{
+    padding-left: 11px;
+}
+
+.col-sm-2{
+    padding-right: 11px;
+}
+
+.col-sm-3{
+    padding-right: 0px;
+}
+
+.col-xs-3{
+    padding-right: 2px;
+}
+
+.form-control{
+    padding: 8px;
+}
+
+input.error{
+    border-color: red;
+    background-color: rgb(238, 192, 192);
+}
