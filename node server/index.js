@@ -26,7 +26,7 @@ app.post("/store_data", (req, res) => {
             let new_json = { ...file , ...json };
             fs.writeFileSync("data.json", JSON.stringify(new_json), { mode: 777});
         }else{
-            fs.writeFileSync("data.json", JSON.stringify(json));
+            fs.writeFileSync("data.json", JSON.stringify(json), { mode: 777});
         }
         res.send(JSON.stringify("Data stored successfully"))
     }catch(err){
