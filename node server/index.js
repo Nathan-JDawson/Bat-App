@@ -42,12 +42,10 @@ app.get("/gen_report", (req, res) => {
     // new child process to run the python script
     const python = spawn("python", ["../report gen/generator.py"]);
 
-    console.log(python.exitCode);
-
-    python.on("error", (error) => {
-        console.log("ERROR: " + error);
-        res.send(error)
-    });
+    python.stderr.on("data", (data) => {
+        data_to_send += data;
+        console.log(data);
+    })
     
     // collect the data output from the script
     python.stdout.on("data", (data) => {
