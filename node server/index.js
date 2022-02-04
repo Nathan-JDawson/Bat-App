@@ -24,9 +24,9 @@ app.post("/store_data", (req, res) => {
             let file_raw = fs.readFileSync("data.json");
             let file = JSON.parse(file_raw);
             let new_json = { ...file , ...json };
-            fs.writeFileSync("data.json", JSON.stringify(new_json), { mode: 777});
+            fs.writeFileSync("data.json", JSON.stringify(new_json), { mode: 0o777});
         }else{
-            fs.writeFileSync("data.json", JSON.stringify(json), { mode: 777});
+            fs.writeFileSync("data.json", JSON.stringify(json), { mode: 0o777});
         }
         res.send(JSON.stringify("Data stored successfully"))
     }catch(err){
@@ -137,6 +137,13 @@ app.get("/stylesheet.css", (req, res) => {
         res.writeHead(200, {"Content-Type": "text/css"});
         res.write(data);
         res.end();
+    })
+})
+
+app.get("/download_report", (req, res) => {
+    const file = "../report gen/generated_report_test.docx"
+    res.download(file, (err) => {
+        if (err) throw err;
     })
 })
 

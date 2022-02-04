@@ -48,6 +48,8 @@
                         window.location.replace("/client_details")
                     }else if($(this).attr("id") === "button_2"){
                         generate_report();
+                    }else if($(this).attr("id") === "button_3"){
+                        download_report();
                     }
                 }
             })
@@ -70,6 +72,21 @@
                                        + ", " + $("#postcode").val().toUpperCase();
 
                 return array;
+            }
+
+            const download_report = () => {
+                /*$.ajax({
+                    url: "download_report",
+                    type: "GET",
+                    success:function(res){
+                        console.log("successfully downloaded");
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })*/
+
+                window.open('/download_report')
             }
 
             // add space in grid reference after 4 numbers
@@ -175,10 +192,13 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-2">
-                        <input class="btn btn-default" type="button" id="button_1" value="Submit and Next Section"></input>
+                        <input class="btn btn-default" type="button" id="button_1" value="Submit and Next Section">
                     </div>
                     <div class="col-lg-2">
-                        <input class="btn btn-default" type="button" id="button_2" value="Submit and Generate Report"></input>
+                        <input class="btn btn-default" type="button" id="button_2" value="Submit and Generate Report">
+                    </div>
+                    <div class="col-lg-2">
+                        <input class="btn btn-default" type="button" id="button_3" value="Download Latest Report">
                     </div>
                 </div>
             </form>
