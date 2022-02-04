@@ -3,6 +3,7 @@ const generate_report = () => {
     $.ajax({
         url: "gen_report",
         type: "GET",
+        async: false,
         success:(res) =>{
             console.log("server response is:", res)
         },

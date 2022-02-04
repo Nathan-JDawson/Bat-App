@@ -15,6 +15,8 @@
     <script type="text/javascript" src="functions.js"></script>
     <script>
         jQuery(document).ready(() => {
+            $("#buttons").load("buttons.html");
+
             $("#commissioners_details").hide()
 
             $("#client_form").validate({
@@ -33,7 +35,7 @@
             })
 
             // need to use function here rather than => as 'this' is used
-            $(":button").click(function(){
+            $("#buttons").on("click", ":button", function(){
                 if($("#client_form").valid()){
                     array = generate_array();
                     send_data(array);
@@ -41,6 +43,8 @@
                         window.location.replace("/project_proposals")
                     }else if($(this).attr("id") === "button_2"){
                         generate_report();
+                    }else if($(this).attr("id") === "button_3"){
+                        window.open('/download_report')
                     }
                 }
             })
@@ -244,13 +248,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-2">
-                        <input class="btn btn-default" type="button" id="button_1" value="Submit and Next Section"></input>
-                    </div>
-                    <div class="col-lg-2">
-                        <input class="btn btn-default" type="button" id="button_2" value="Submit and Generate Report"></input>
-                    </div>
+                <div class="row" id="buttons">
+                    <!-- buttons.html will be loaded here -->
                 </div>
             </form>
         </div>

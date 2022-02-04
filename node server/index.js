@@ -74,15 +74,15 @@ app.post("/compress_image", upload.single("upload"), (req, res) => {
     sharp(filepath)
     .jpeg({ mozjpeg: true, quality: 40 })
     .toFile(output)
-    .then(() => {
-        res.send("image compressed")
-    })
     .catch((err) => {
-        res.send(err)
-    });
+        throw err;
+    })
+    
+    res.send("image compressed")
     res.end()
 })
 
+// clears the temp image folder
 const clear_temp = () => {
     let folder = "temp";
 
@@ -97,6 +97,7 @@ const clear_temp = () => {
     });
 }
 
+// will display the html file to the user
 const display_html = (filename, req, res) => {
     fs.readFile((filename), (err, html) => {
         if(err) throw err;
@@ -122,8 +123,9 @@ app.get("/", (req, res) => {
     display_html("../website pages/site_details.html", req, res)
 })
 
+// returns the js file for the webpage to use
 app.get("/functions.js", (req, res) => {
-    fs.readFile("../website pages/functions.js", (err, data) => {
+    fs.readFile("../website pages/js/functions.js", (err, data) => {
         if (err) throw err;
         res.writeHead(200, {"Content-Type": "text/javascript"});
         res.write(data);
@@ -131,8 +133,9 @@ app.get("/functions.js", (req, res) => {
     })
 })
 
+// returns the stylesheet for the webpage to use
 app.get("/stylesheet.css", (req, res) => {
-    fs.readFile("../website pages/stylesheet.css", (err, data) => {
+    fs.readFile("../website pages/css/stylesheet.css", (err, data) => {
         if (err) throw err;
         res.writeHead(200, {"Content-Type": "text/css"});
         res.write(data);
@@ -140,10 +143,21 @@ app.get("/stylesheet.css", (req, res) => {
     })
 })
 
+// allows the user to download the report
 app.get("/download_report", (req, res) => {
     const file = "../report gen/generated_report_test.docx"
     res.download(file, (err) => {
         if (err) throw err;
+    })
+})
+
+// returns the buttons elements for the webpage to use
+app.get("/buttons.html", (req, res) => {
+    fs.readFile("../website pages/elements/buttons.html", (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, {"Content-Type": "text/html"});
+        res.write(data);
+        res.end();
     })
 })
 

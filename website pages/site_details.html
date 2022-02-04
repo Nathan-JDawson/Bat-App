@@ -9,9 +9,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="/functions.js" type="text/javascript"></script>
+    <script src="functions.js" type="text/javascript"></script>
     <script>
         jQuery(document).ready(() => {
+            $("#buttons").load("buttons.html");
+
             // set up validation for the form - uses jQuery Validate plugin
             $("#site_form").validate({
                 debug: false,
@@ -40,7 +42,7 @@
             })
 
             // need to use function here rather than => as 'this' is used
-            $(":button").click(function(){
+            $("#buttons").on("click", ":button", function(){
                 if($("#site_form").valid()){
                     array = generate_array();
                     send_data(array);
@@ -49,7 +51,7 @@
                     }else if($(this).attr("id") === "button_2"){
                         generate_report();
                     }else if($(this).attr("id") === "button_3"){
-                        download_report();
+                        window.open('/download_report')
                     }
                 }
             })
@@ -72,21 +74,6 @@
                                        + ", " + $("#postcode").val().toUpperCase();
 
                 return array;
-            }
-
-            const download_report = () => {
-                /*$.ajax({
-                    url: "download_report",
-                    type: "GET",
-                    success:function(res){
-                        console.log("successfully downloaded");
-                    },
-                    error:function(err){
-                        console.log(err);
-                    }
-                })*/
-
-                window.open('/download_report')
             }
 
             // add space in grid reference after 4 numbers
@@ -190,16 +177,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-2">
-                        <input class="btn btn-default" type="button" id="button_1" value="Submit and Next Section">
-                    </div>
-                    <div class="col-lg-2">
-                        <input class="btn btn-default" type="button" id="button_2" value="Submit and Generate Report">
-                    </div>
-                    <div class="col-lg-2">
-                        <input class="btn btn-default" type="button" id="button_3" value="Download Latest Report">
-                    </div>
+                <div class="row" id="buttons">
+                    <!-- buttons.html will be loaded here -->
                 </div>
             </form>
         </div>
