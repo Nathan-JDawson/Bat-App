@@ -1,4 +1,3 @@
-from typing import List, Dict
 from docxtpl import DocxTemplate # type: ignore
 import json
 
