@@ -24,9 +24,9 @@ app.post("/store_data", (req, res) => {
             let file_raw = fs.readFileSync("data.json");
             let file = JSON.parse(file_raw);
             let new_json = { ...file , ...json };
-            fs.writeFileSync("data.json", JSON.stringify(new_json), { mode: 0o777});
+            fs.writeFileSync("data.json", JSON.stringify(new_json), { mode: 0o777 });
         }else{
-            fs.writeFileSync("data.json", JSON.stringify(json), { mode: 0o777});
+            fs.writeFileSync("data.json", JSON.stringify(json), { mode: 0o777 });
         }
         res.send(JSON.stringify("Data stored successfully"))
     }catch(err){
@@ -74,12 +74,8 @@ app.post("/compress_image", upload.single("upload"), (req, res) => {
     sharp(filepath)
     .jpeg({ mozjpeg: true, quality: 40 })
     .toFile(output)
-    .catch((err) => {
-        throw err;
-    })
     
-    res.send("image compressed")
-    res.end()
+    res.send(JSON.stringify("image compressed"));
 })
 
 // clears the temp image folder
@@ -101,33 +97,33 @@ const clear_temp = () => {
 const display_html = (filename, req, res) => {
     fs.readFile((filename), (err, html) => {
         if(err) throw err;
-        res.writeHead(200, {"Content-Type": "text/html"});
+        res.writeHead(200, { "Content-Type": "text/html" });
         res.write(html);
         res.end()
     })
 }; 
 
+app.get("/site_description", (req, res) => {
+    display_html("../website/webpages/project_details/site_description.html", req, res);
+})
+
 app.get("/project_proposals", (req, res) => {
-    // display html to user
-    display_html("../website pages/project_proposals.html", req, res)
+    display_html("../website/webpages/project_details/project_proposals.html", req, res);
 })
 
 app.get("/client_details", (req, res) => {
-    // display html to user
-    display_html("../website pages/client_details.html", req, res)
+    display_html("../website/webpages/project_details/client_details.html", req, res);
 })
 
-// when user visit root page
 app.get("/", (req, res) => {
-    // display html to user
-    display_html("../website pages/site_details.html", req, res)
+    display_html("../website/webpages/project_details/site_details.html", req, res);
 })
 
 // returns the js file for the webpage to use
 app.get("/functions.js", (req, res) => {
-    fs.readFile("../website pages/js/functions.js", (err, data) => {
+    fs.readFile("../website/js/functions.js", (err, data) => {
         if (err) throw err;
-        res.writeHead(200, {"Content-Type": "text/javascript"});
+        res.writeHead(200, { "Content-Type": "text/javascript" });
         res.write(data);
         res.end()
     })
@@ -135,9 +131,9 @@ app.get("/functions.js", (req, res) => {
 
 // returns the stylesheet for the webpage to use
 app.get("/stylesheet.css", (req, res) => {
-    fs.readFile("../website pages/css/stylesheet.css", (err, data) => {
+    fs.readFile("../website/css/stylesheet.css", (err, data) => {
         if (err) throw err;
-        res.writeHead(200, {"Content-Type": "text/css"});
+        res.writeHead(200, { "Content-Type": "text/css" });
         res.write(data);
         res.end();
     })
@@ -153,9 +149,19 @@ app.get("/download_report", (req, res) => {
 
 // returns the buttons elements for the webpage to use
 app.get("/buttons.html", (req, res) => {
-    fs.readFile("../website pages/elements/buttons.html", (err, data) => {
+    fs.readFile("../website/elements/buttons.html", (err, data) => {
         if (err) throw err;
-        res.writeHead(200, {"Content-Type": "text/html"});
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.write(data);
+        res.end();
+    })
+})
+
+// returns the options elements for the webpage to use
+app.get("/options.html", (req, res) => {
+    fs.readFile("../website/elements/options.html", (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, { "Content-Type": "text/html" });
         res.write(data);
         res.end();
     })

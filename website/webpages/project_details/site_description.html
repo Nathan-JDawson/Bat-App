@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Site Description</title>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="functions.js" type="text/javascript"></script>
+    <script>
+        jQuery(document).ready(() => {
+            $("#buttons").load("buttons.html");
+
+            $("#building_type").change(() => {
+                let building = $("#building_type").val().toLowerCase();
+                $("#load_options").load("options.html #" + building);
+            })
+
+            // set up validation for the form - uses jQuery Validate plugin
+            $("#description_form").validate({
+                
+            })
+
+            // need to use function here rather than => as 'this' is used
+            $("#buttons").on("click", ":button", function(){
+                if($("#description_form").valid()){
+                    array = generate_array();
+                    send_data(array);
+                    if($(this).attr("id") === "button_1"){
+                        window.location.replace("/client_details")
+                    }else if($(this).attr("id") === "button_2"){
+                        generate_report();
+                    }else if($(this).attr("id") === "button_3"){
+                        window.open('/download_report')
+                    }
+                }
+            })
+
+            // captures the form into an array/object
+            const generate_array = () => {
+                let array = {
+                    
+                };
+
+                return array;
+            }
+
+            $("#add_another").click(() => {
+                $("#building_single").clone().appendTo("#building_form");
+            })
+        });
+    </script>
+    <style>
+        .panel-heading{
+            cursor: pointer;
+        }
+        .center{
+            text-align: center;
+        }
+        .grid_label{
+            line-height: 3;
+        }
+    </style>
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <h1>Site Description</h1>
+            <!--
+                Values Needed:
+                Location
+                    Description
+                    Land Use
+                Building Type
+                    Name (optional)
+                    Type
+                    Use
+                Habitat
+                    Types on site
+                    Types in surrounding
+                        Woodland
+                        Hedgegrow
+                        Waterbodies
+                Transport
+            -->
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading" id="heading_1">
+                        <h3 class="panel-title" data-parent="#accordion" data-toggle="collapse" data-target="#location_collapse">Location</h4>
+                    </div>
+                    <div id="location_collapse" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form id="location_form">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-3">Location Description:</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <select class="form-control" id="location_1">
+                                                <option selected>Site Type...</option>
+                                                <option>Rural</option>
+                                                <option>Suburban</option>
+                                                <option>Urban</option>
+                                                <option>Industrial</option>
+                                                <option>Commercial</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <input class="form-control" type="text" placeholder="site" readonly>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <select class="form-control" id="location_2">
+                                                <option selected>Location...</option>
+                                                <option>In</option>
+                                                <option>Within</option>
+                                                <option>Close to</option>
+                                                <option>Adjacent to</option>
+                                                <option>Edge of</option>
+                                                <option>Outskirts of</option>
+                                                <option>Centre of</option>
+                                                <option>North of</option>
+                                                <option>East of</option>
+                                                <option>South of</option>
+                                                <option>West of</option>
+                                                <option>North East of</option>
+                                                <option>North West of</option>
+                                                <option>South East of</option>
+                                                <option>South West of</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input class="form-control" type="text" placeholder="the settlement" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-3">Geographic Relation:</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <input class="form-control" type="number" id="distance" step="0.01"
+                                                placeholder="Approximately... (km)">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <select class="form-control" id="location_3">
+                                                <option selected>Location...</option>
+                                                <option>North of</option>
+                                                <option>East of</option>
+                                                <option>South of</option>
+                                                <option>West of</option>
+                                                <option>North East of</option>
+                                                <option>North West of</option>
+                                                <option>South East of</option>
+                                                <option>South West of</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input class="form-control" type="text" id="major" placeholder="Major City/Area...">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-parent="#accordion" data-toggle="collapse" data-target="#building_collapse">Building Type</h3>
+                    </div>
+                    <div id="building_collapse" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form id="building_form">
+                                <div id="building_single" class="form-group building">
+                                    <div class="row">
+                                        <label class="col-sm-3">Building Name:</label>
+                                        <div class="col-sm-6">
+                                            <input class="form-control" type="text" id="building_name">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-3">Building Type:</label>
+                                        <div class="col-sm-6">
+                                            <select class="form-control" id="building_type">
+                                                <option selected>Type...</option>
+                                                <option>Agricultural</option>
+                                                <option>Civic</option>
+                                                <option>Commercial</option>
+                                                <option>Educational</option>
+                                                <option>Governmental</option>
+                                                <option>Industrial</option>
+                                                <option>Medical</option>
+                                                <option>Parking</option>
+                                                <option>Parking</option>
+                                                <option>Religious</option>
+                                                <option>Residential</option>
+                                                <option>Transport</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-3">Building Use:</label>
+                                        <div id="load_options" class="col-sm-6">
+                                            <!-- load options based on what was selected before -->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label class="col-sm-3">Current Use:</label>
+                                        <div class="col-sm-6">
+                                            <select id="current_use" class="form-control">
+                                                <option>Occupied</option>
+                                                <option>Occupied</option>
+                                                <option>Disused</option>
+                                                <option>Deerelict</option>
+                                                <option>Unknown</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <hr class="solid">
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <button type="button" class="btn btn-default" id="add_another">Add building</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" data-parent="#accordion" data-toggle="collapse" data-target="#habitat_collapse"">Habitat Features</h3>
+                    </div>
+                    <div id="habitat_collapse" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <form id="habitat_form">
+                                <div class="row">
+                                    <label class="col-xs-3 center">Feature</label>
+                                    <label class="col-xs-3 center">None</label>
+                                    <label class="col-xs-3 center">A Few</label>
+                                    <label class="col-xs-3 center">Many</label>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label class="col-xs-3 grid_label center">Woodlands</label>
+                                        <div class="col-xs-3">
+                                            <input type="radio" class="form-control" name="woodland" value="none">
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="radio" class="form-control" name="woodland" value="few">
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="radio" class="form-control" name="woodland" value="many">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label class="col-xs-3 grid_label center">Water</label>
+                                        <div class="col-xs-3">
+                                            <input type="radio" class="form-control" name="water" value="none">
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="radio" class="form-control" name="water" value="few">
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <input type="radio" class="form-control" name="water" value="many">
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="buttons">
+                <!-- buttons.html will be loaded here -->
+            </div>
+        </div>
+    </body>
+</html>

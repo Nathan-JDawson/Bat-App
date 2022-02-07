@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Site Details</title>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="functions.js" type="text/javascript"></script>
+    <script>
+        jQuery(document).ready(() => {
+            $("#buttons").load("buttons.html");
+
+            // set up validation for the form - uses jQuery Validate plugin
+            $("#site_form").validate({
+                debug: false,
+                rules: {
+                    name    : "required",
+                    line_1  : "required",
+                    town    : "required",
+                    county  : "required",
+                    postcode: {
+                        required    : true,
+                        postcodeUK  : true
+                    },
+                    grid: {
+                        required    : true,
+                        minlength   : 9,
+                        maxlength   : 9
+                    },
+                    size        : "required"
+                },
+                messages: {
+                    grid: {
+                        minlength: "Must be 8 numbers long",
+                        maxlength: "Must be 8 numbers long"
+                    }
+                }
+            })
+
+            // need to use function here rather than => as 'this' is used
+            $("#buttons").on("click", ":button", function(){
+                if($("#site_form").valid()){
+                    array = generate_array();
+                    send_data(array);
+                    if($(this).attr("id") === "button_1"){
+                        window.location.replace("/client_details")
+                    }else if($(this).attr("id") === "button_2"){
+                        generate_report();
+                    }else if($(this).attr("id") === "button_3"){
+                        window.open('/download_report')
+                    }
+                }
+            })
+
+            // captures the form into an array/object
+            const generate_array = () => {
+                let array = {
+                    "site_name"     : $("#site_name").val(),
+                    "site_address"  : $("#address_line_1").val(),
+                    "grid_ref"      : $("#grid").val(),
+                    "dev_size"      : $("#size").val(),
+                    "units"         : $("#size_units").val()
+                };
+
+                if($("#address_line_2").val())
+                    array["site_address"] += ", " + $("#address_line_2").val();
+
+                array["site_address"] += ", " + $("#town").val() 
+                                       + ", " + $("#county").val() 
+                                       + ", " + $("#postcode").val().toUpperCase();
+
+                return array;
+            }
+
+            // add space in grid reference after 4 numbers
+            $("#grid").on("keyup", function() {
+                let text = $(this).val().split(" ").join("");
+                if(text.length > 0)
+                    text = text.match(new RegExp('.{1,4}', 'g')).join(" ");
+                $(this).val(text); 
+            });
+        });
+    </script>
+    </head>
+
+    <body>
+        <div class="container-fluid">
+            <h1>Site Details</h1>
+            <!--
+                Values Needed:
+                Site Name
+                Site Address:
+                    Line 1
+                    Line 2
+                    Town
+                    County
+                    Postcode
+                
+                Grid Reference
+                Size
+            -->
+            <form id="site_form" action="">
+                <div class="form-group">
+                    <div class="row">
+                        <label class="col-sm-3">Site Name:</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" id="site_name" name="name">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Site Address:</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-1">Line 1:</label>
+                        <div class="col-sm-4">
+                            <input class="form-control form-inline" type="text" id="address_line_1" name="line_1">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-1">Line 2:</label>
+                        <div class="col-sm-4">
+                            <input class="form-control form-inline" type="text" id="address_line_2" name="line_2">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-1">Town:</label>
+                        <div class="col-sm-4">
+                            <input class="form-control form-inline" type="text" id="town" name="town">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-1">County:</label>
+                        <div class="col-sm-4">
+                            <input class="form-control form-inline" type="text" id="county" name="county">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-1">Postcode:</label>
+                        <div class="col-sm-4">
+                            <input class="form-control form-inline" type="text" id="postcode" name="postcode">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label>Grid Reference:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <input class="form-control" type="text" id="grid" name="grid">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Development Size (approx.):</label>
+                    <div class="row">
+                        <div class="col-xs-3  col-sm-2">
+                            <input class="form-control" type="number" id="size" step=".001" name="size">
+                        </div>
+                        <div class="col-xs-3 col-sm-2">
+                            <select class="form-control" id="size_units" name="units">
+                                <option>ha</option>
+                                <option>m&#x00B2;</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="buttons">
+                    <!-- buttons.html will be loaded here -->
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

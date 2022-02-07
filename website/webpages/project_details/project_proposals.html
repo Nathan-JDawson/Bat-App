@@ -28,21 +28,16 @@
 
             // need to use function here rather than => as 'this' is used
             $("#buttons").on("click", ":button", function(){
-                if($(this).attr("id") == "clear"){
-                    // clear file input
-                    $("#upload").val(null);
-                }else{
-                    if($("#proposal_form").valid()){
-                        array = generate_array();
-                        send_data(array);
-                        send_image();
-                        if($(this).attr("id") === "button_1"){
-                            window.location.replace("/client_details")
-                        }else if($(this).attr("id") === "button_2"){
-                            generate_report();
-                        }else if($(this).attr("id") === "button_3"){
-                        window.open('/download_report')
-                        }
+                if($("#proposal_form").valid()){
+                    array = generate_array();
+                    send_data(array);
+                    send_image();
+                    if($(this).attr("id") === "button_1"){
+                        window.location.replace("/client_details")
+                    }else if($(this).attr("id") === "button_2"){
+                        generate_report();
+                    }else if($(this).attr("id") === "button_3"){
+                    window.open('/download_report')
                     }
                 }
             })
@@ -72,6 +67,10 @@
                     }
                 });
             }
+
+            $("#clear").click(() => {
+                $("#upload").val(null);
+            })
         })
     </script>
     </head>
@@ -105,7 +104,7 @@
                         <input type="file" class="control-file" id="upload" name="upload">
                     </div>
                     <div class="col-xs-1 col-sm-1 col-lg-1">
-                        <button class="btn btn-danger" id="clear" name="clear">Clear 
+                        <button type="button" class="btn btn-danger" id="clear" name="clear">Clear 
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </div>
