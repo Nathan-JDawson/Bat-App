@@ -51,6 +51,21 @@
             $("#add_another").click(() => {
                 $("#building_single").clone().appendTo("#building_form");
             })
+
+            $("#test").click(() => {
+                let features = {
+                    arable      : $("input[name = arable]:checked").val(),
+                    flowing     : $("input[name = flowing]:checked").val(),
+                    grassland  : $("input[name = grassland]:checked").val(),
+                    hedgerows   : $("input[name = hedgerows]:checked").val(),
+                    pasture     : $("input[name = pasture]:checked").val(),
+                    scrubland   : $("input[name = scrubland]:checked").val(),
+                    standing    : $("input[name = standing]:checked").val(),
+                    woodland    : $("input[name = woodland]:checked").val(),
+                };
+
+                console.log(features);
+            })
         });
     </script>
     <style>
@@ -60,15 +75,17 @@
         .center{
             text-align: center;
         }
-        .grid_label{
-            line-height: 3;
+        .vcenter{
+            display: flex;
+            align-items: center;
+            text-align: center;
         }
     </style>
     </head>
 
     <body>
         <div class="container-fluid">
-            <h1>Site Description</h1>
+            <h1 class="text-center">Site Description</h1>
             <!--
                 Values Needed:
                 Location
@@ -239,6 +256,7 @@
                     <div id="habitat_collapse" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <form id="habitat_form">
+                                <p class="lead text-center">On site and in the surrounding areas, how many of these features do you find...</p>
                                 <!-- 
                                     Features:
                                     Arable land
@@ -250,18 +268,137 @@
                                     Standing Water
                                     Woodland
                                 -->
-                                <div class="row">
-                                    <label class="col-xs-2 center">Feature</label>
+                                <div class="row vcenter">
+                                    <label class="col-xs-3 center">Feature</label>
                                     <label class="col-xs-2 center">None</label>
-                                    <label class="col-xs-2 center">Small Area</label>
+                                    <label class="col-xs-2 center">Small Areas</label>
                                     <label class="col-xs-2 center">Serveral Areas</label>
                                     <label class="col-xs-2 center">Significant Areas</label>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group">
-                                        <label class="col-xs-2 grid_label center">Woodlands</label>
+                                    <div id="arable" class="form-group vcenter">
+                                        <label class="col-xs-3">Arable Land</label>
                                         <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="woodland" value="none">
+                                            <input type="radio" class="form-control" name="arable" value="none" checked>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="arable" value="small">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="arable" value="several">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="arable" value="significant">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group vcenter">
+                                        <label class="col-xs-3">Flowing Water</label>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="flowing" value="none" checked>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="flowing" value="small">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="flowing" value="several">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="flowing" value="significant">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group vcenter">
+                                        <label class="col-xs-3">Grassland</label>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="grassland" value="none" checked>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="grassland" value="small">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="grassland" value="several">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="grassland" value="significant">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group vcenter">
+                                        <label class="col-xs-3">Hedgerows</label>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="hedgerows" value="none" checked>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="hedgerows" value="small">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="hedgerows" value="several">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="hedgerows" value="significant">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group vcenter">
+                                        <label class="col-xs-3">Pasture</label>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="pasture" value="none" checked>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="pasture" value="small">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="pasture" value="several">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="pasture" value="significant">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group vcenter">
+                                        <label class="col-xs-3">Scrubland</label>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="scrubland" value="none" checked>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="scrubland" value="small">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="scrubland" value="several">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="scrubland" value="significant">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group vcenter">
+                                        <label class="col-xs-3">Standing Water</label>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="standing" value="none" checked>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="standing" value="small">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="standing" value="several">
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="standing" value="significant">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group vcenter">
+                                        <label class="col-xs-3">Woodland</label>
+                                        <div class="col-xs-2">
+                                            <input type="radio" class="form-control" name="woodland" value="none" checked>
                                         </div>
                                         <div class="col-xs-2">
                                             <input type="radio" class="form-control" name="woodland" value="small">
@@ -275,17 +412,8 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group">
-                                        <label class="col-xs-3 grid_label center">Water</label>
-                                        <div class="col-xs-3">
-                                            <input type="radio" class="form-control" name="water" value="none">
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <input type="radio" class="form-control" name="water" value="few">
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <input type="radio" class="form-control" name="water" value="many">
-                                        </div>
+                                    <div class="col-xs-3">
+                                        <button type="button" class="btn btn-default" id="test">Test</button>
                                     </div>
                                 </div>
                             </form>
