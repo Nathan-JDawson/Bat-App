@@ -28,6 +28,15 @@ textarea.error{
     background-color: rgb(238, 192, 192); 
 }
 
+select.error{
+    border-color: red;
+    background-color: rgb(238, 192, 192); 
+}
+
+.panel-heading.error{
+    background-color: rgb(238, 192, 192); 
+}
+
 hr.solid{
     border-top: 8px solid lightgray;
     border-radius: 5px;

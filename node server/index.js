@@ -115,8 +115,12 @@ app.get("/client_details", (req, res) => {
     display_html("../website/webpages/project_details/client_details.html", req, res);
 })
 
-app.get("/", (req, res) => {
+app.get("/site_details", (req, res) => {
     display_html("../website/webpages/project_details/site_details.html", req, res);
+})
+
+app.get("/", (req, res) => {
+    display_html("../website/webpages/menu.html", req, res);
 })
 
 // returns the js file for the webpage to use
@@ -150,6 +154,16 @@ app.get("/download_report", (req, res) => {
 // returns the buttons elements for the webpage to use
 app.get("/buttons.html", (req, res) => {
     fs.readFile("../website/elements/buttons.html", (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.write(data);
+        res.end();
+    })
+})
+
+// returns the back button element for the webpage to use
+app.get("/back.html", (req, res) => {
+    fs.readFile("../website/elements/back.html", (err, data) => {
         if (err) throw err;
         res.writeHead(200, { "Content-Type": "text/html" });
         res.write(data);

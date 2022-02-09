@@ -16,6 +16,7 @@
     <script>
         jQuery(document).ready(() => {
             $("#buttons").load("buttons.html");
+            $("#back_button").load("back.html");
 
             $("#proposal_form").validate({
                 debug: false,
@@ -78,6 +79,7 @@
     <body>
         <div class="container-fluid">
             <h1 class="text-center">Project Proposals</h1>
+            <div id="back_button"></div>
             <!--
                 Values Needed:
                 Development Proposals
