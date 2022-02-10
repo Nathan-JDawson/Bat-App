@@ -119,6 +119,14 @@ app.get("/site_details", (req, res) => {
     display_html("../website/webpages/project_details/site_details.html", req, res);
 })
 
+app.get("/results_menu", (req, res) => {
+    display_html("../website/webpages/results/results_menu.html", req, res);
+})
+
+app.get("/exterior", (req, res) => {
+    display_html("../website/webpages/results/exterior.html", req, res);
+})
+
 app.get("/", (req, res) => {
     display_html("../website/webpages/menu.html", req, res);
 })
