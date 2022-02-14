@@ -179,6 +179,16 @@ app.get("/back.html", (req, res) => {
     })
 })
 
+// returns the evidence options elements for the webpage to use
+app.get("/bat_evidence_options.html", (req, res) => {
+    fs.readFile("../website/elements/bat_evidence_options.html", (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.write(data);
+        res.end();
+    })
+})
+
 // returns the options elements for the webpage to use
 app.get("/options.html", (req, res) => {
     fs.readFile("../website/elements/options.html", (err, data) => {

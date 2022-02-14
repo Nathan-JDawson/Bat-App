@@ -17,6 +17,15 @@
 
             // $("#walls_present").hide();
 
+            $("#bat_wall_evidence").change(() => {
+                let species = ["live bats", "dead bats", "droppings", "eDNA"]
+                let evidence = $("#bat_wall_evidence").val();
+                if(species.includes(evidence))
+                    $("#load_species").load("bat_evidence_options.html #species");
+                else
+                    $("#load_species").html("");
+            })
+
             $("input[name = walls]").change(() => {
                 if($("#walls_yes").is(":checked")){
                     $("#walls_present").show();
@@ -201,7 +210,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="bat_wall_evidence">
+                                <div id="bat_wall_evidence_div">
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <select class="form-control" id="bat_wall_evidence" name="bat_wall_evidence">
@@ -216,6 +225,29 @@
                                                 <option value="bat flies">Bat Flies</option>
                                                 <option value="eDNA">eDNA</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div id="load_species">
+                                                <!-- Load in the options for the species if needed -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-5">
+                                            <select class="form-control" id="walls_evidence_amount" name="walls_evidence_amount">
+                                                <option value="" selected>Amount...</option>
+                                                <option value="small">Small</option>
+                                                <option value="moderate">Moderate</option>
+                                                <option value="large">Large</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            <p class="lead text-center">or</p>
+                                        </div>
+                                        <div class="col-xs-5">
+                                            <input class="form-control" type="number" step="1" min="0" id="walls_evidence_amount_num" name="walls_evidence_amount_num">
                                         </div>
                                     </div>
                                     <!-- Upload photo of evidence, allow caption to be added -->
