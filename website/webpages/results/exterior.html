@@ -15,22 +15,22 @@
             $("#buttons").load("buttons.html");
             $("#back_button").load("back.html");
 
-            // $("#walls_present").hide();
-
-            $("#bat_wall_evidence").change(() => {
-                let species = ["live bats", "dead bats", "droppings", "eDNA"]
-                let evidence = $("#bat_wall_evidence").val();
-                if(species.includes(evidence))
-                    $("#load_species").load("bat_evidence_options.html #species");
-                else
-                    $("#load_species").html("");
-            })
+            // load in evidence div and then hide it
+            $("#bat_wall_evidence_div").load("bat_evidence_options.html")
 
             $("input[name = walls]").change(() => {
                 if($("#walls_yes").is(":checked")){
                     $("#walls_present").show();
                 }else{
                     $("#walls_present").hide();
+                }
+            })
+
+            $("input[name = bat_walls]").change(() => {
+                if($("#bat_walls_yes").is(":checked")){
+                    $("#bat_wall_evidence_div").show();
+                }else{
+                    $("#bat_wall_evidence_div").hide();
                 }
             })
 
@@ -144,9 +144,53 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="walls_present">
+                            <div id="walls_present" hidden>
                                 <div class="row">
-                                    <div class="col-xs-12">
+                                    <label class="col-xs-12">
+                                        The walls comprised of...
+                                    </label>
+                                </div>
+                                <div class="row">
+                                    <div class="checkbox col-xs-12">
+                                        <div class="col-xs-3">
+                                            <label><input type="checkbox" id="brick" name="brick">Brick</label>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label><input type="checkbox" id="stone" name="stone">Stone</label>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label><input type="checkbox" id="timber" name="timber">Timber</label>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label><input type="checkbox" id="steel" name="steel">Steel</label>
+                                        </div>
+                                    </div>
+                                    <div class="checkbox col-xs-12">
+                                        <div class="col-xs-3">
+                                            <label><input type="checkbox" id="render" name="render">Render</label>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label><input type="checkbox" id="cladding" name="cladding">Cladding</label>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label><input type="checkbox" id="block" name="block">Block</label>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <label><input type="checkbox" id="shiplap" name="shiplap">Shiplap</label>
+                                        </div>
+                                    </div>
+                                    <div class="checkbox col-xs-12">
+                                        <div class="col-xs-3">
+                                            <label><input type="checkbox" id="hanging tiles" name="hanging tiles">Hanging Tiles</label>
+                                        </div>
+                                        <div class="col-xs-5">
+                                            <label><input type="checkbox" id="weatherboarding" name="weatherboarding">Weatherboarding</label>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label><input type="checkbox" id="waney lap" name="waney lap">Waney Lap</label>
+                                        </div>
+                                    </div>
+                                        <!--
                                         <select class="form-control" id="wall_material" name="wall_material">
                                             <option value="" selected>Main Material...</option>
                                             <option value="brick">Brick</option>
@@ -161,7 +205,7 @@
                                             <option value="shiplap">Shiplap</option>
                                             <option value="waney lap">Waney Lap</option>
                                         </select>
-                                    </div>
+                                        -->
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -210,47 +254,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="bat_wall_evidence_div">
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <select class="form-control" id="bat_wall_evidence" name="bat_wall_evidence">
-                                                <option value="" selected>Evidence...</option>
-                                                <option value="live bats">Live Bats</option>
-                                                <option value="dead bats">Dead Bats</option>
-                                                <option value="droppings">Droppings</option>
-                                                <option value="urine staining">Urine Staining</option>
-                                                <option value="fur oil staining">Fur Oil Staining</option>
-                                                <option value="squeaking noises">Squeaking Noises</option>
-                                                <option value="feeding reamins">Feeding Remains</option>
-                                                <option value="bat flies">Bat Flies</option>
-                                                <option value="eDNA">eDNA</option>
-                                            </select>
-                                        </div>
+                                <div id="bat_wall_evidence_div" hidden>
+                                    <!-- load in evidence elements -->
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <select class="form-control" id="walls_potential" name="walls_potential">
+                                            <option value="">Bat Potential...</option>
+                                            <option value="high">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
+                                            <option value="negligible">Negligible</option>
+                                        </select>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <div id="load_species">
-                                                <!-- Load in the options for the species if needed -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-5">
-                                            <select class="form-control" id="walls_evidence_amount" name="walls_evidence_amount">
-                                                <option value="" selected>Amount...</option>
-                                                <option value="small">Small</option>
-                                                <option value="moderate">Moderate</option>
-                                                <option value="large">Large</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <p class="lead text-center">or</p>
-                                        </div>
-                                        <div class="col-xs-5">
-                                            <input class="form-control" type="number" step="1" min="0" id="walls_evidence_amount_num" name="walls_evidence_amount_num">
-                                        </div>
-                                    </div>
-                                    <!-- Upload photo of evidence, allow caption to be added -->
                                 </div>
                             </div>
                         </form>
