@@ -1,74 +1,133 @@
 <script>
-    $("#bat_wall_evidence").change(() => {
+    $("#whole_section").on("change", ".bat_wall_evidence", function() {
         let species = ["live bats", "dead bats", "droppings", "eDNA"]
-        let evidence = $("#bat_wall_evidence").val();
+        let evidence = $(this).val();
+        let parent = $(this).parents(".add_evidence");
         if(species.includes(evidence))
-            $("#load_species").show();
+            $(parent).find("#load_species").show();
         else
-            $("#load_species").hide();
-    })
-</script>
+            $(parent).find("#load_species").hide();
+    });
 
-<div class="row">
-    <div class="col-xs-12">
-        <select class="form-control" id="bat_wall_evidence" name="bat_wall_evidence">
-            <option value="" selected>Evidence...</option>
-            <option value="live bats">Live Bats</option>
-            <option value="dead bats">Dead Bats</option>
-            <option value="droppings">Droppings</option>
-            <option value="urine staining">Urine Staining</option>
-            <option value="fur oil staining">Fur Oil Staining</option>
-            <option value="squeaking noises">Squeaking Noises</option>
-            <option value="feeding reamins">Feeding Remains</option>
-            <option value="bat flies">Bat Flies</option>
-            <option value="eDNA">eDNA</option>
-        </select>
-    </div>
-</div>
-<div class="row">
-    <div class="col-xs-12">
-        <div id="load_species" hidden>
-            <div id="species">
-                <select class="form-control" id="bat_species" name="bat_species">
-                    <option value="" selected>Species...</option>
-                    <option value="alcathoe">Alcathoe</option>
-                    <option value="barbastelle">Barbastelle</option>
-                    <option value="bechstein's">Bechstein's</option>
-                    <option value="brandt's">Brandt's</option>
-                    <option value="brown long-eared">Brown Long-Eared</option>
-                    <option value="common pipistrelle">Common Pipistrelle</option>
-                    <option value="daubenton's">Daubenton's</option>
-                    <option value="greater horseshoe">Greater Horseshoe</option>
-                    <option value="grey long-eared">Grey Long-Eared</option>
-                    <option value="leisler's">Leisler's</option>
-                    <option value="lesser horseshoe">Lesser Horseshoe</option>
-                    <option value="nathusius' oioistrelle">Nathusius' Pipistrelle</option>
-                    <option value="natterer's">Natterer's</option>
-                    <option value="noctule">Noctule</option>
-                    <option value="serotine">Serotine</option>
-                    <option value="soprano pipstrelle">Soprano Pipistrelle</option>
-                    <option value="whiskered">Whiskered</option>
-                    <option value="unknown">Unknown</option>
+    let num = 0;
+
+    $("#add_more_evidence").click(() => {
+        num += 1;
+        $("#0").clone().prop("id", num).appendTo($("#whole_section")).show();
+    })
+
+    $("#remove_evidence").click(() => {
+        num -= 1;
+        $(".add_evidence").last().remove();
+    })
+
+    $("#image").change(() => {
+        let fd = new FormData(), file = document.getElementById("image").files[0];
+        fd.append("upload", file)
+        $.ajax({
+            type: "POST",
+            url: "compress_image",
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                console.log(data)
+                $("#photo_upload").append("<img id='preview' src=''>");
+                $("#preview").attr("src", data.imageUrl)
+            },
+            error: function (err) {
+                console.error(err)
+            }
+        });
+    })
+
+
+</script>
+<style>
+img {
+    display: block;
+    max-width:350px;
+    max-height:150px;
+    width: auto;
+    height: auto;
+}
+</style>
+<div id="whole_section">
+    <div class="add_evidence" id="0" hidden>
+        <div class="row">
+            <div class="col-xs-12">
+                <select class="form-control bat_wall_evidence" name="bat_wall_evidence">
+                    <option value="" selected>Evidence...</option>
+                    <option value="live bats">Live Bats</option>
+                    <option value="dead bats">Dead Bats</option>
+                    <option value="droppings">Droppings</option>
+                    <option value="urine staining">Urine Staining</option>
+                    <option value="fur oil staining">Fur Oil Staining</option>
+                    <option value="squeaking noises">Squeaking Noises</option>
+                    <option value="feeding reamins">Feeding Remains</option>
+                    <option value="bat flies">Bat Flies</option>
+                    <option value="eDNA">eDNA</option>
                 </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="load_species" hidden>
+                    <div id="species">
+                        <select class="form-control" id="bat_species" name="bat_species">
+                            <option value="" selected>Species...</option>
+                            <option value="alcathoe">Alcathoe</option>
+                            <option value="barbastelle">Barbastelle</option>
+                            <option value="bechstein's">Bechstein's</option>
+                            <option value="brandt's">Brandt's</option>
+                            <option value="brown long-eared">Brown Long-Eared</option>
+                            <option value="common pipistrelle">Common Pipistrelle</option>
+                            <option value="daubenton's">Daubenton's</option>
+                            <option value="greater horseshoe">Greater Horseshoe</option>
+                            <option value="grey long-eared">Grey Long-Eared</option>
+                            <option value="leisler's">Leisler's</option>
+                            <option value="lesser horseshoe">Lesser Horseshoe</option>
+                            <option value="nathusius' oioistrelle">Nathusius' Pipistrelle</option>
+                            <option value="natterer's">Natterer's</option>
+                            <option value="noctule">Noctule</option>
+                            <option value="serotine">Serotine</option>
+                            <option value="soprano pipstrelle">Soprano Pipistrelle</option>
+                            <option value="whiskered">Whiskered</option>
+                            <option value="unknown">Unknown</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-5">
+                <select class="form-control" id="walls_evidence_amount" name="walls_evidence_amount">
+                    <option value="" selected>Amount...</option>
+                    <option value="small">Small</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="large">Large</option>
+                </select>
+            </div>
+            <div class="col-xs-2">
+                <p class="lead text-center">or</p>
+            </div>
+            <div class="col-xs-5">
+                <input class="form-control" type="number" step="1" min="0" id="walls_evidence_amount_num" name="walls_evidence_amount_num">
             </div>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-xs-5">
-        <select class="form-control" id="walls_evidence_amount" name="walls_evidence_amount">
-            <option value="" selected>Amount...</option>
-            <option value="small">Small</option>
-            <option value="moderate">Moderate</option>
-            <option value="large">Large</option>
-        </select>
+    <div class="col-xs-6">
+        <button type="button" class="btn btn-success" id="add_more_evidence">Add More Evidence</button>
     </div>
-    <div class="col-xs-2">
-        <p class="lead text-center">or</p>
-    </div>
-    <div class="col-xs-5">
-        <input class="form-control" type="number" step="1" min="0" id="walls_evidence_amount_num" name="walls_evidence_amount_num">
+    <div class="col-xs-6">
+        <button type="button" class="btn btn-danger" id="remove_evidence">Remove Last Evidence</button>
     </div>
 </div>
+<br>
 <!-- Upload photo of evidence, allow caption to be added -->
+<div id="photo_upload" class="form-group">
+    <input type="file" class="control-file" id="image">
+</div>
 

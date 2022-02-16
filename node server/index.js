@@ -9,8 +9,9 @@ const favicon = require('serve-favicon')
 const sharp = require("sharp");
 const path = require("path");
 
-app.use(bodyParser.json())
-app.use(favicon("favicon.ico"))
+app.use(bodyParser.json());
+app.use(favicon("favicon.ico"));
+app.use("/report_gen/img", express.static("../report_gen/img"));
 
 // used to add data to the json file
 app.post("/store_data", (req, res) => {
@@ -40,7 +41,7 @@ app.get("/gen_report", (req, res) => {
     let data_to_send;
 
     // new child process to run the python script
-    const python = spawn("python", ["../report gen/generator.py"]);
+    const python = spawn("python", ["../report_gen/generator.py"]);
 
     python.stderr.on("data", (data) => {
         data_to_send += data;
@@ -69,13 +70,16 @@ const upload = multer({
 // image compression when uploading a file
 app.post("/compress_image", upload.single("upload"), (req, res) => {
     let filepath = req.file.path;
-    let output = "../report gen/img/image.jpeg";
+    let output = "../report_gen/img/image.jpeg";
     
     sharp(filepath)
     .jpeg({ mozjpeg: true, quality: 40 })
     .toFile(output)
-    
-    res.send(JSON.stringify("image compressed"));
+
+    res.status(200).json({
+        "imageName": "image",
+        "imageUrl": output
+    });
 })
 
 // clears the temp image folder
@@ -153,7 +157,7 @@ app.get("/stylesheet.css", (req, res) => {
 
 // allows the user to download the report
 app.get("/download_report", (req, res) => {
-    const file = "../report gen/generated_report_test.docx"
+    const file = "../report_gen/generated_report_test.docx"
     res.download(file, (err) => {
         if (err) throw err;
     })
