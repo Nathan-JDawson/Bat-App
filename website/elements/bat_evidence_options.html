@@ -9,48 +9,19 @@
             $(parent).find("#load_species").hide();
     });
 
-    let num = 0;
+    let e_num = 0;
 
     $("#add_more_evidence").click(() => {
-        num += 1;
-        $("#0").clone().prop("id", num).appendTo($("#whole_section")).show();
+        e_num += 1;
+        $("#0").clone().prop("id", e_num).appendTo($("#whole_section")).show();
     })
 
     $("#remove_evidence").click(() => {
-        num -= 1;
+        e_num -= 1;
         $(".add_evidence").last().remove();
     })
-
-    $("#image").change(() => {
-        let fd = new FormData(), file = document.getElementById("image").files[0];
-        fd.append("upload", file)
-        $.ajax({
-            type: "POST",
-            url: "compress_image",
-            data: fd,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                console.log(data)
-                $("#photo_upload").append("<img id='preview' src=''>");
-                $("#preview").attr("src", data.imageUrl)
-            },
-            error: function (err) {
-                console.error(err)
-            }
-        });
-    })
-
-
 </script>
 <style>
-img {
-    display: block;
-    max-width:350px;
-    max-height:150px;
-    width: auto;
-    height: auto;
-}
 </style>
 <div id="whole_section">
     <div class="add_evidence" id="0" hidden>
@@ -58,14 +29,14 @@ img {
             <div class="col-xs-12">
                 <select class="form-control bat_wall_evidence" name="bat_wall_evidence">
                     <option value="" selected>Evidence...</option>
-                    <option value="live bats">Live Bats</option>
-                    <option value="dead bats">Dead Bats</option>
+                    <option value="live_bats">Live Bats</option>
+                    <option value="dead_bats">Dead Bats</option>
                     <option value="droppings">Droppings</option>
-                    <option value="urine staining">Urine Staining</option>
-                    <option value="fur oil staining">Fur Oil Staining</option>
-                    <option value="squeaking noises">Squeaking Noises</option>
-                    <option value="feeding reamins">Feeding Remains</option>
-                    <option value="bat flies">Bat Flies</option>
+                    <option value="urine_staining">Urine Staining</option>
+                    <option value="fur_oil_staining">Fur Oil Staining</option>
+                    <option value="squeaking_noises">Squeaking Noises</option>
+                    <option value="feeding_reamins">Feeding Remains</option>
+                    <option value="bat_flies">Bat Flies</option>
                     <option value="eDNA">eDNA</option>
                 </select>
             </div>
@@ -126,8 +97,3 @@ img {
     </div>
 </div>
 <br>
-<!-- Upload photo of evidence, allow caption to be added -->
-<div id="photo_upload" class="form-group">
-    <input type="file" class="control-file" id="image">
-</div>
-

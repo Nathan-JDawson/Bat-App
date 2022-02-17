@@ -14,8 +14,7 @@
         jQuery(document).ready(() => {
             $("#buttons").load("buttons.html");
             $("#back_button").load("back.html");
-
-            // load in evidence div and then hide it
+            $("#image_upload").load("image_upload.html")
             $("#bat_wall_evidence_div").load("bat_evidence_options.html")
 
             $("input[name = walls]").change(() => {
@@ -23,14 +22,6 @@
                     $("#walls_present").show();
                 }else{
                     $("#walls_present").hide();
-                }
-            })
-
-            $("input[name = bat_walls]").change(() => {
-                if($("#bat_walls_yes").is(":checked")){
-                    $("#bat_wall_evidence_div").show();
-                }else{
-                    $("#bat_wall_evidence_div").hide();
                 }
             })
 
@@ -53,6 +44,39 @@
                         window.open('/download_report')
                     }
                 }
+            })
+
+            // adds/removes promts for photos when materials are (un)checked
+            $("#checkboxes").on("change", ":checkbox", function(){
+                let name = $(this).attr("name");
+                if($(this).is(":checked")){
+                    let html = `<li id='p_${name}'>Add photo of ${name} wall</li>`;
+                    $("#images_promts").append(html);
+                }else
+                    $(`#p_${name}`).remove();
+            })
+
+            // add/removes promts for photos when cracks are marked as present
+            $("input[type=radio][name=cracks]").change(function(){
+                $("#p_cracks").remove();
+                if($(this).val() !== "none"){
+                    let html = "<li id=p_cracks>Add photo of cracks in walls</li>"
+                    $("#images_promts").append(html)
+                }
+            })
+
+            $("#bat_wall_evidence_div").on("change", ".bat_wall_evidence", function(){
+                let num = $(this).parents(".add_evidence").attr("id");
+                $(`#p_${num}`).remove();
+                let evidence = $(this).val().replace("_", " ");
+                if(evidence){
+                    let html = `<li id='p_${num}'>Add photo of ${evidence} evidence</li>`
+                    $("#images_promts").append(html)
+                }
+            })
+
+            $("#images_promts").on("click", "li", function(){
+                $(this).css("text-decoration", "line-through")
             })
 
             // captures the form into an array/object
@@ -79,6 +103,9 @@
             display: flex;
             align-items: center;
             text-align: center;
+        }
+        li{
+            cursor: pointer;
         }
     </style>
 </head>
@@ -150,67 +177,53 @@
                                         The walls comprised of...
                                     </label>
                                 </div>
-                                <div class="row">
-                                    <div class="checkbox">
-                                        <div class="col-xs-3">
-                                            <label><input type="checkbox" id="brick" name="brick">Brick</label>
+                                <div id="checkboxes">
+                                    <div class="row">
+                                        <div class="checkbox">
+                                            <div class="col-xs-3">
+                                                <label><input type="checkbox" id="brick" name="brick">Brick</label>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <label><input type="checkbox" id="stone" name="stone">Stone</label>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <label><input type="checkbox" id="timber" name="timber">Timber</label>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <label><input type="checkbox" id="steel" name="steel">Steel</label>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-3">
-                                            <label><input type="checkbox" id="stone" name="stone">Stone</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="checkbox">
+                                            <div class="col-xs-3">
+                                                <label><input type="checkbox" id="render" name="render">Render</label>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <label><input type="checkbox" id="cladding" name="cladding">Cladding</label>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <label><input type="checkbox" id="block" name="block">Block</label>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <label><input type="checkbox" id="shiplap" name="shiplap">Shiplap</label>
+                                            </div>
                                         </div>
-                                        <div class="col-xs-3">
-                                            <label><input type="checkbox" id="timber" name="timber">Timber</label>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <label><input type="checkbox" id="steel" name="steel">Steel</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="checkbox">
+                                            <div class="col-xs-4">
+                                                <label><input type="checkbox" id="hanging tiles" name="hanging tiles">Hanging Tiles</label>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <label><input type="checkbox" id="weatherboarding" name="weatherboarding">Weatherboarding</label>
+                                            </div>
+                                            <div class="col-xs-4">
+                                                <label><input type="checkbox" id="waney lap" name="waney lap">Waney Lap</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="checkbox">
-                                        <div class="col-xs-3">
-                                            <label><input type="checkbox" id="render" name="render">Render</label>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <label><input type="checkbox" id="cladding" name="cladding">Cladding</label>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <label><input type="checkbox" id="block" name="block">Block</label>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <label><input type="checkbox" id="shiplap" name="shiplap">Shiplap</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="checkbox">
-                                        <div class="col-xs-4">
-                                            <label><input type="checkbox" id="hanging tiles" name="hanging tiles">Hanging Tiles</label>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <label><input type="checkbox" id="weatherboarding" name="weatherboarding">Weatherboarding</label>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <label><input type="checkbox" id="waney lap" name="waney lap">Waney Lap</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                        <!--
-                                        <select class="form-control" id="wall_material" name="wall_material">
-                                            <option value="" selected>Main Material...</option>
-                                            <option value="brick">Brick</option>
-                                            <option value="stone">Stone</option>
-                                            <option value="timber">Timber</option>
-                                            <option value="steel">Steel</option>
-                                            <option value="render">Render</option>
-                                            <option value="cladding">Cladding</option>
-                                            <option value="hanging tiles">Hanging Tiles</option>
-                                            <option value="weatherboarding">Weatherboarding</option>
-                                            <option value="block">Block</option>
-                                            <option value="shiplap">Shiplap</option>
-                                            <option value="waney lap">Waney Lap</option>
-                                        </select>
-                                        -->
                                 <br>
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -230,19 +243,19 @@
                                     <label class="col-xs-2">Many</label>
                                 </div>
                                 <div class="row">
-                                    <div class="form-group vcenter">
+                                    <div class="form-group vcenter" id="cracks_select">
                                         <label class="col-xs-3">Cracks</label>
                                         <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="arable" value="none" checked>
+                                            <input type="radio" class="form-control" name="cracks" value="none" checked>
                                         </div>
                                         <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="arable" value="small">
+                                            <input type="radio" class="form-control" name="cracks" value="some">
                                         </div>
                                         <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="arable" value="several">
+                                            <input type="radio" class="form-control" name="cracks" value="several">
                                         </div>
                                         <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="arable" value="significant">
+                                            <input type="radio" class="form-control" name="cracks" value="many">
                                         </div>
                                     </div>
                                 </div>
@@ -251,17 +264,22 @@
                                         <label>Evidence of bats found?</label>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="radio">
-                                            <label><input type="radio" id="bat_walls_yes" name="bat_walls">Yes</label>
-                                            <label><input type="radio" id="bat_walls_no" name="bat_walls" checked>No</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="bat_wall_evidence_div" hidden>
+                                <div id="bat_wall_evidence_div">
                                     <!-- load in evidence elements -->
                                 </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <label>Photo Upload (Click list items to cross off)</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <ul id="images_promts"></ul>
+                                    </div>
+                                </div>
+                                <!-- Upload photo of evidence, allow caption to be added -->
+                                <div id="image_upload"></div>
+                                <br>
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <select class="form-control" id="walls_potential" name="walls_potential">

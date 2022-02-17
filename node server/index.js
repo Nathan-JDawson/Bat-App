@@ -70,16 +70,22 @@ const upload = multer({
 // image compression when uploading a file
 app.post("/compress_image", upload.single("upload"), (req, res) => {
     let filepath = req.file.path;
-    let output = "../report_gen/img/image.jpeg";
+    let output = "../report_gen/img/" + req.file.originalname;
     
-    sharp(filepath)
-    .jpeg({ mozjpeg: true, quality: 40 })
-    .toFile(output)
-
-    res.status(200).json({
-        "imageName": "image",
-        "imageUrl": output
-    });
+    // use promise so that website doesn't load image before it is uploaded
+    return new Promise((resolve) => {
+        sharp(filepath)
+        .jpeg({ mozjpeg: true, quality: 40 })
+        .toFile(output, (err, info) => {
+            if (err) return resolve(false);
+            return resolve(info);
+        })
+    }).then(() => {
+        res.status(200).json({
+            "imageName": req.file.originalname,
+            "imageUrl": output
+        });
+    })
 })
 
 // clears the temp image folder
@@ -196,6 +202,15 @@ app.get("/bat_evidence_options.html", (req, res) => {
 // returns the options elements for the webpage to use
 app.get("/options.html", (req, res) => {
     fs.readFile("../website/elements/options.html", (err, data) => {
+        if (err) throw err;
+        res.writeHead(200, { "Content-Type": "text/html" });
+        res.write(data);
+        res.end();
+    })
+})
+
+app.get("/image_upload.html", (req, res) => {
+    fs.readFile("../website/elements/image_upload.html", (err, data) => {
         if (err) throw err;
         res.writeHead(200, { "Content-Type": "text/html" });
         res.write(data);
