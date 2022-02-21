@@ -1,12 +1,11 @@
 <script>
-    $(".btn_image").click(function(){
-        $(this).parent().find(".image").trigger("click");
+    $("#walls_image_upload").on("click", ".btn_image", function(){
+        $(this).parents(".photo_upload").find(".image").trigger("click");
     })
 
-    $(".image").change(function(){
-        let id = $(this).attr("id");
-        let fd = new FormData(), file = $(this).prop("files")[0];
-        fd.append("upload", file)
+    $("#walls_image_upload").on("change", ".image", function(){
+        let fd = new FormData(), file = $(this).prop("files")[0], parents = $(this).parents(".photo_upload");
+        fd.append("upload", file);
         $.ajax({
             type: "POST",
             url: "compress_image",
@@ -14,14 +13,14 @@
             contentType: false,
             processData: false,
             success: function (data) {
-                $("#filename_" + id).val(data.imageName)
+                parents.find(".filename").val(data.imageName);
                 let img = document.createElement("IMG");
-                img.setAttribute("id", "preview_img");
-                img.setAttribute("class", "img-responsive img-rounded")
+                img.setAttribute("id", "preview_" + data.imageName);
+                img.setAttribute("class", "img-responsive img-rounded preview");
                 img.src = data.imageUrl;
                 img.alt = "image preview";
-                $("#preview_" + id).html(img);
-                $("#caption_div_" + id).show();
+                parents.find(".preview_div").html(img);
+                parents.find(".caption_div").show();
             },
             error: function (err) {
                 console.error(err)
@@ -55,23 +54,23 @@
     }
 </style>
 <div id="walls_image_upload">
-    <div class="photo_upload" class="form-group" id="div_0" hidden>
+    <div class="form-group photo_upload" id="div_0" hidden>
         <div class="row">
             <div class="col-xs-3">
-                <button type="button" class="btn btn-default btn_image">Browse...</button>
-                <input type="file" class="image" id="0">
+                <button type="button" class="btn_image btn btn-default ">Browse...</button>
+                <input type="file" class="image">
             </div>
             <div class="col-xs-9">
-                <input type="text" class="form-control" id="filename_0" readonly>
+                <input type="text" class="form-control filename" readonly>
             </div>
         </div>
         <div class="img_and_caption">
             <div class="row">
                 <div class="col-xs-12">
-                    <div id="preview_0"></div>
+                    <div class="preview_div"></div>
                 </div>
             </div>
-            <div class="row" id="caption_div_0" hidden>
+            <div class="row caption_div" hidden>
                 <div class="col-xs-8">
                     <label>Image Caption:</label>
                 </div>

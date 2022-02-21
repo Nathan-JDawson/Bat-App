@@ -16,12 +16,12 @@ if __name__ == "__main__":
         json_data = open_json("../node server/data.json")
 
         # import the template doc
-        template = DocxTemplate("../report gen/simply_ecology_template.docx")
+        template = DocxTemplate("../report_gen/simply_ecology_template.docx")
 
     
         # render new doc
         template.render(json_data, autoescape=True)
-        template.save("../report gen/generated_report_test.docx")
+        template.save("../report_gen/generated_report_test.docx")
 
         print("generated successfully")
     except Exception as e:

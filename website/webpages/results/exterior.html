@@ -14,8 +14,8 @@
         jQuery(document).ready(() => {
             $("#buttons").load("buttons.html");
             $("#back_button").load("back.html");
-            $("#image_upload").load("image_upload.html")
-            $("#bat_wall_evidence_div").load("bat_evidence_options.html")
+            $("#image_upload").load("image_upload.html");
+            $("#bat_wall_evidence_div").load("bat_evidence_options.html");
 
             $("input[name = walls]").change(() => {
                 if($("#walls_yes").is(":checked")){
@@ -33,15 +33,17 @@
 
             // need to use function here rather than => as 'this' is used
             $("#buttons").on("click", ":button", function () {
-                if (valid) {
+                let valid = true;
+                if (valid){
                     array = generate_array();
+                    console.log(array);
                     send_data(array);
                     if ($(this).attr("id") === "button_1") {
-                        window.location.replace("/client_details")
+                        window.location.replace("/client_details");
                     } else if ($(this).attr("id") === "button_2") {
                         generate_report();
                     } else if ($(this).attr("id") === "button_3") {
-                        window.open('/download_report')
+                        window.open('/download_report');
                     }
                 }
             })
@@ -60,29 +62,60 @@
             $("input[type=radio][name=cracks]").change(function(){
                 $("#p_cracks").remove();
                 if($(this).val() !== "none"){
-                    let html = "<li id=p_cracks>Add photo of cracks in walls</li>"
-                    $("#images_promts").append(html)
+                    let html = "<li id=p_cracks>Add photo of cracks in walls</li>";
+                    $("#images_promts").append(html);
                 }
             })
 
+            // add prompts based on evidence added
             $("#bat_wall_evidence_div").on("change", ".bat_wall_evidence", function(){
                 let num = $(this).parents(".add_evidence").attr("id");
                 $(`#p_${num}`).remove();
                 let evidence = $(this).val().replace("_", " ");
                 if(evidence){
-                    let html = `<li id='p_${num}'>Add photo of ${evidence} evidence</li>`
-                    $("#images_promts").append(html)
+                    let html = `<li id='p_${num}'>Add photo of ${evidence} evidence</li>`;
+                    $("#images_promts").append(html);
                 }
             })
 
             $("#images_promts").on("click", "li", function(){
-                $(this).css("text-decoration", "line-through")
+                $(this).css("text-decoration", "line-through");
             })
+
+            const generate_filenames = () => {
+                // select all filename elements - put in array
+                let filenames = $(".filename");
+                let filenames_array = [];
+                filenames.map((index, element) => {
+                    if($(element).val())
+                        filenames_array.push($(element).val());
+                })
+
+                return filenames_array;
+            }
+
+            const generate_captions = () => {
+                let images = $(".preview").attr("src");
+                console.log(images);
+
+                let captions = $(".caption");
+                let captions_array = [];
+                captions.map((index, element) => {
+                    if($(element).val())
+                        captions_array.push($(element).val());
+                })
+
+                return captions_array;
+            }
 
             // captures the form into an array/object
             const generate_array = () => {
-                let array = {
+                let filenames_array = generate_filenames();
+                let captions_array = generate_captions();
 
+                let array = {
+                        filenames: filenames_array,
+                        captions: captions_array
                     };
 
                 return array;
