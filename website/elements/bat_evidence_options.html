@@ -1,19 +1,19 @@
 <script>
     $("#whole_section").on("change", ".bat_wall_evidence", function() {
-        let species = ["live bats", "dead bats", "droppings", "eDNA"]
+        let species = ["live_bats", "dead_bats", "eDNA"]
         let evidence = $(this).val();
         let parent = $(this).parents(".add_evidence");
         if(species.includes(evidence))
-            $(parent).find("#load_species").show();
+            $(parent).find(".load_species").show();
         else
-            $(parent).find("#load_species").hide();
+            $(parent).find(".load_species").hide();
     });
 
     let e_num = 0;
 
     $("#add_more_evidence").click(() => {
         e_num += 1;
-        $("#0").clone().prop("id", e_num).appendTo($("#whole_section")).show();
+        $("#ev_0").clone().prop("id", "ev_" + e_num).removeClass("template").appendTo($("#whole_section")).show();
     })
 
     $("#remove_evidence").click(() => {
@@ -24,7 +24,7 @@
 <style>
 </style>
 <div id="whole_section">
-    <div class="add_evidence" id="0" hidden>
+    <div class="add_evidence template" id="ev_0" hidden>
         <div class="row">
             <div class="col-xs-12">
                 <select class="form-control bat_wall_evidence" name="bat_wall_evidence">
@@ -43,9 +43,9 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <div id="load_species" hidden>
+                <div class="load_species" hidden>
                     <div id="species">
-                        <select class="form-control" id="bat_species" name="bat_species">
+                        <select class="form-control bat_species_wall" name="bat_species">
                             <option value="" selected>Species...</option>
                             <option value="alcathoe">Alcathoe</option>
                             <option value="barbastelle">Barbastelle</option>
@@ -72,7 +72,7 @@
         </div>
         <div class="row">
             <div class="col-xs-5">
-                <select class="form-control" id="walls_evidence_amount" name="walls_evidence_amount">
+                <select class="form-control walls_evidence_amount" name="walls_evidence_amount">
                     <option value="" selected>Amount...</option>
                     <option value="small">Small</option>
                     <option value="moderate">Moderate</option>
@@ -83,7 +83,7 @@
                 <p class="lead text-center">or</p>
             </div>
             <div class="col-xs-5">
-                <input class="form-control" type="number" step="1" min="0" id="walls_evidence_amount_num" name="walls_evidence_amount_num">
+                <input class="form-control walls_evidence_amount_num" type="number" step="1" min="0" name="walls_evidence_amount_num">
             </div>
         </div>
     </div>

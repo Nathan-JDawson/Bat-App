@@ -58,10 +58,15 @@
         <div class="row">
             <div class="col-xs-3">
                 <button type="button" class="btn_image btn btn-default ">Browse...</button>
-                <input type="file" class="image">
+                <input type="file" class="image" name="image">
             </div>
             <div class="col-xs-9">
-                <input type="text" class="form-control filename" readonly>
+                <input type="text" class="form-control filename" name="filename" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="filename_error"></div>
             </div>
         </div>
         <div class="img_and_caption">
@@ -75,7 +80,7 @@
                     <label>Image Caption:</label>
                 </div>
                 <div class="col-xs-12">
-                    <input type="text" class="form-control caption" placeholder="Caption...">
+                    <input type="text" class="form-control caption" placeholder="Caption..." name="caption">
                 </div>
             </div>
         </div>

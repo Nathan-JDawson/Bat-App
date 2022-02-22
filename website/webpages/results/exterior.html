@@ -27,13 +27,76 @@
 
             // set up validation for the forms - uses jQuery Validate plugin
             let select_message = "Please select an option"
-            $("#location_form").validate({
-                
+            $("#walls_form").validate({
+                debug: true,
+                // will ignore the hidden elements used as templates
+                ignore: ":hidden",
+                rules: {
+                    wall_material: {
+                        required: true
+                    },
+                    wall_condition: {
+                        required: true
+                    },
+                    cracks: {
+                        required: true
+                    },
+                    walls_potential: {
+                        required: true
+                    },
+                    bat_wall_evidence: {
+                        required: true
+                    },
+                    bat_species: {
+                        // required if evidence type displays species selector
+                        required: (element) => {
+                            return $(element).css("display") !== "hidden";
+                        }
+                    },
+                    walls_evidence_amount: {
+                        // required if amount num is left blank
+                        required: (element) => {
+                            return $(element).parents(".row").find(".walls_evidence_amount_num").val().length === 0
+                        }
+                    },
+                    walls_evidence_amount_num: {
+                        // required if amount is left unselected
+                        required: (element) => {
+                            return $(element).parents(".row").find(".walls_evidence_amount").val().length === 0
+                        }
+                    },
+                    filename: {
+                        required: true
+                    },
+                    caption: {
+                        required: true
+                    }
+                },
+                errorPlacement: (error, element) => {
+                    if($(element).attr("name") === "wall_material"){
+                        error.appendTo("#material_error");
+                    }
+                    if($(element).attr("name") === "filename"){
+                        let error_element = $(element).parents(".photo_upload").find(".filename_error")
+                        error.appendTo(error_element);
+                    }
+                },
+                messages: {
+                    wall_material: {
+                        required: "Please check at least one checkbox"
+                    },
+                    wall_condition: {
+                        required: select_message
+                    },
+                    filename: {
+                        required: "Please upload image"
+                    }
+                }
             })
 
             // need to use function here rather than => as 'this' is used
             $("#buttons").on("click", ":button", function () {
-                let valid = true;
+                let valid = $("#walls_form").valid();
                 if (valid){
                     array = generate_array();
                     console.log(array);
@@ -50,7 +113,7 @@
 
             // adds/removes promts for photos when materials are (un)checked
             $("#checkboxes").on("change", ":checkbox", function(){
-                let name = $(this).attr("name");
+                let name = $(this).val();
                 if($(this).is(":checked")){
                     let html = `<li id='p_${name}'>Add photo of ${name} wall</li>`;
                     $("#images_promts").append(html);
@@ -82,6 +145,18 @@
                 $(this).css("text-decoration", "line-through");
             })
 
+            const generate_images = () => {
+                // select all image elements - put src in array
+                let images = $(".preview");
+                let images_array = [];
+                images.map((index, element) => {
+                    if($(element).attr("src"))
+                        images_array.push($(element).attr("src"));
+                })
+
+                return images_array;
+            }
+
             const generate_filenames = () => {
                 // select all filename elements - put in array
                 let filenames = $(".filename");
@@ -95,9 +170,7 @@
             }
 
             const generate_captions = () => {
-                let images = $(".preview").attr("src");
-                console.log(images);
-
+                // select all caption elements - put in array
                 let captions = $(".caption");
                 let captions_array = [];
                 captions.map((index, element) => {
@@ -108,14 +181,61 @@
                 return captions_array;
             }
 
+            const generate_materials = () => {
+                let wall_materials = $("input:checkbox[name=wall_material]:checked");
+                let wall_materials_array = [];
+                wall_materials.map((index, element) => {
+                    wall_materials_array.push($(element).val());
+                })
+
+                return wall_materials_array;
+            }
+
+            // create array of evidence objects
+            const generate_evidence = () => {
+                let evidence = $(".add_evidence");
+                let evidence_array = [];
+                evidence.map((index, element) => {
+                    if($(element).css("display") !== "none"){
+                        let type = $(element).find(".bat_wall_evidence").val();
+                        let species = $(element).find(".bat_species_wall").val();
+                        let amount = $(element).find(".walls_evidence_amount").val();
+                        // if amount not selected, use number value instead
+                        if(amount.length === 0)
+                            amount = $(element).find(".walls_evidence_amount_num").val();
+                        
+                        let evidence_obj = {
+                            type    : type,
+                            species : species,
+                            amount  : amount
+                        }
+
+                        evidence_array.push(evidence_obj);
+                    }
+                })
+
+                return evidence_array;
+            }
+
             // captures the form into an array/object
             const generate_array = () => {
+                let wall_materials_array = generate_materials();
+
+                let evidence_array = generate_evidence();
+
                 let filenames_array = generate_filenames();
                 let captions_array = generate_captions();
+                // let images_array = generate_images();
+                
 
                 let array = {
-                        filenames: filenames_array,
-                        captions: captions_array
+                        wall_materials  : wall_materials_array,
+                        wall_condition  : $("#wall_condition").val(),
+                        wall_cracks     : $("input:radio[name=cracks]:checked").val(),
+                        wall_potential  : $("#walls_potential").val(),
+                        wall_evidence   : evidence_array,
+                        filenames       : filenames_array,
+                        captions        : captions_array
                     };
 
                 return array;
@@ -214,46 +334,51 @@
                                     <div class="row">
                                         <div class="checkbox">
                                             <div class="col-xs-3">
-                                                <label><input type="checkbox" id="brick" name="brick">Brick</label>
+                                                <label><input type="checkbox" id="brick" name="wall_material" value="brick">Brick</label>
                                             </div>
                                             <div class="col-xs-3">
-                                                <label><input type="checkbox" id="stone" name="stone">Stone</label>
+                                                <label><input type="checkbox" id="stone" name="wall_material" value="stone">Stone</label>
                                             </div>
                                             <div class="col-xs-3">
-                                                <label><input type="checkbox" id="timber" name="timber">Timber</label>
+                                                <label><input type="checkbox" id="timber" name="wall_material" value="timber">Timber</label>
                                             </div>
                                             <div class="col-xs-3">
-                                                <label><input type="checkbox" id="steel" name="steel">Steel</label>
+                                                <label><input type="checkbox" id="steel" name="wall_material" value="steel">Steel</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="checkbox">
                                             <div class="col-xs-3">
-                                                <label><input type="checkbox" id="render" name="render">Render</label>
+                                                <label><input type="checkbox" id="render" name="wall_material" value="render">Render</label>
                                             </div>
                                             <div class="col-xs-3">
-                                                <label><input type="checkbox" id="cladding" name="cladding">Cladding</label>
+                                                <label><input type="checkbox" id="cladding" name="wall_material" value="cladding">Cladding</label>
                                             </div>
                                             <div class="col-xs-3">
-                                                <label><input type="checkbox" id="block" name="block">Block</label>
+                                                <label><input type="checkbox" id="block" name="wall_material" value="block">Block</label>
                                             </div>
                                             <div class="col-xs-3">
-                                                <label><input type="checkbox" id="shiplap" name="shiplap">Shiplap</label>
+                                                <label><input type="checkbox" id="shiplap" name="wall_material" value="shiplap">Shiplap</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="checkbox">
                                             <div class="col-xs-4">
-                                                <label><input type="checkbox" id="hanging tiles" name="hanging tiles">Hanging Tiles</label>
+                                                <label><input type="checkbox" id="hanging tiles" name="wall_material" value="hanging_tiles">Hanging Tiles</label>
                                             </div>
                                             <div class="col-xs-4">
-                                                <label><input type="checkbox" id="weatherboarding" name="weatherboarding">Weatherboarding</label>
+                                                <label><input type="checkbox" id="weatherboarding" name="wall_material" value="weatherboarding">Weatherboarding</label>
                                             </div>
                                             <div class="col-xs-4">
-                                                <label><input type="checkbox" id="waney lap" name="waney lap">Waney Lap</label>
+                                                <label><input type="checkbox" id="waney lap" name="wall_material" value="waney_lap">Waney Lap</label>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div id="material_error"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -261,7 +386,7 @@
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <select class="form-control" id="wall_condition" name="wall_condition">
-                                            <option value="" selected>Condition...</option>
+                                            <option value="" selected>Overall Condition...</option>
                                             <option value="good">Good</option>
                                             <option value="moderate">Moderate</option>
                                             <option value="poor">Poor</option>
