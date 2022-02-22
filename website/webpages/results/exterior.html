@@ -10,6 +10,8 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="functions.js" type="text/javascript"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <script>
         jQuery(document).ready(() => {
             $("#buttons").load("buttons.html");
@@ -17,12 +19,11 @@
             $("#image_upload").load("image_upload.html");
             $("#bat_wall_evidence_div").load("bat_evidence_options.html");
 
-            $("input[name = walls]").change(() => {
-                if($("#walls_yes").is(":checked")){
+            $("input[type=checkbox]").change(function(){
+                if($(this).prop("checked"))
                     $("#walls_present").show();
-                }else{
+                else
                     $("#walls_present").hide();
-                }
             })
 
             // set up validation for the forms - uses jQuery Validate plugin
@@ -318,9 +319,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <div class="radio">
-                                        <label><input type="radio" id="walls_yes" name="walls">Yes</label>
-                                        <label><input type="radio" id="walls_no" name="walls" checked>No</label>
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" id="walls" data-toggle="toggle" data-on="Yes" data-off="No"></label>
                                     </div>
                                 </div>
                             </div>

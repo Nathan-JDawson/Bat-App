@@ -80,6 +80,7 @@ app.post("/compress_image", upload.single("upload"), (req, res): Promise<void> =
     return new Promise((resolve) => {
         sharp(filepath)
         .jpeg({ mozjpeg: true, quality: 40 })
+        .withMetadata()
         .toFile(output, (err, info) => {
             if (err) return resolve(false);
             return resolve(info);
