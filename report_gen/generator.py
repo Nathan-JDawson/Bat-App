@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 import traceback
 from docx.shared import Mm # type: ignore
 from docxtpl import DocxTemplate, InlineImage # type: ignore
@@ -22,10 +22,26 @@ if __name__ == "__main__":
         # import the template doc
         template = DocxTemplate("../report_gen/simply_ecology_template.docx")
 
-        # filepath: str = "../report_gen/img/" + json_data["filenames"][0]
-        # img = Image.open(filepath)
-        # img = img.save(filepath)
-        # json_data["image_external_wall_1"] = InlineImage(template, filepath, height=Mm(60))
+        # takes the filenames from the json file, uses them to create InlineImages
+        filenames: List[str] = json_data["filenames"]
+        images: List = []
+        for index, filename in enumerate(filenames):
+            path = "../report_gen/img/" + filename
+
+            # need to open and resave image - problem with docxtpl and iOS images :/
+            img = Image.open(path)
+            img = img.save(path)
+
+            image = {
+                "image"     : InlineImage(template, path, height=Mm(70)),
+                "caption"   : json_data["captions"][index]
+            }
+            
+            images.append(image)
+        #endfor
+        
+        json_data["image_external_wall"] = images
+        print(json_data)
 
         # render new doc
         template.render(json_data, autoescape=True)

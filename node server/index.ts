@@ -2,7 +2,6 @@ import express from "express";
 import { spawn } from "child_process";
 import fs, { PathOrFileDescriptor } from "fs";
 const app: Application = express()
-import errorHandler from "errorhandler";
 const port: number = 3000
 import bodyParser from "body-parser";
 import multer from "multer";
@@ -77,30 +76,10 @@ app.post("/compress_image", upload.single("upload"), (req, res): void => {
     let filepath = req.file.path;
     let output = "../report_gen/img/" + req.file.originalname;
 
-    // use promise so that website doesn't load image before it is uploaded
-    // return new Promise((resolve) => {
-    //     sharp(filepath)
-    //     .jpeg({ mozjpeg: true, quality: 40 })
-    //     .toFile(output, (err, info) => {
-    //         if (err) return resolve(false);
-    //         console.log("here");
-    //         return resolve(info);
-    //     })
-    // }).then(() => {
-        
-    //     res.status(200).json({
-    //         "imageName": req.file.originalname,
-    //         "imageUrl": output
-    //     });
-    // })
-
-    console.log(filepath, output);
-
     sharp(filepath)
     .jpeg({mozjpeg: true, quality: 40})
     .toFile(output)
-    .then(info => {
-        console.log(info);
+    .then(() => {
         res.status(200).json({
             "imageName" : req.file.originalname,
             "imageUrl"  : output
@@ -227,17 +206,6 @@ app.get("/image_upload.html", (req, res): void => {
 
 // clear the temp image folder on server start
 clear_temp();
-
-const logs = (err, str, req, res) => {
-    console.log(err);
-    console.log(str);
-    console.log(req);
-    console.log(res);
-}
-
-app.use(errorHandler({log: logs}))
-
-
 
 app.listen(port, ():void => {
     console.log("Server listening on port:", port);
