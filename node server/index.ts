@@ -2,6 +2,7 @@ import express from "express";
 import { spawn } from "child_process";
 import fs, { PathOrFileDescriptor } from "fs";
 const app: Application = express()
+import errorHandler from "errorhandler";
 const port: number = 3000
 import bodyParser from "body-parser";
 import multer from "multer";
@@ -41,7 +42,7 @@ app.post("/store_data", (req, res): void => {
 
 // used to generate the report
 app.get("/gen_report", (req, res): void => {
-    let data_to_send: String;
+    let data_to_send: string;
 
     // new child process to run the python script
     const python = spawn("python", ["../report_gen/generator.py"]);
@@ -72,26 +73,41 @@ const upload = multer({
 });
 
 // image compression when uploading a file
-app.post("/compress_image", upload.single("upload"), (req, res): Promise<void> => {
+app.post("/compress_image", upload.single("upload"), (req, res): void => {
     let filepath = req.file.path;
     let output = "../report_gen/img/" + req.file.originalname;
-    
-    // use promise so that website doesn't load image before it is uploaded
-    return new Promise((resolve) => {
-        sharp(filepath)
-        .jpeg({ mozjpeg: true, quality: 40 })
-        .withMetadata()
-        .toFile(output, (err, info) => {
-            if (err) return resolve(false);
-            return resolve(info);
-        })
-    }).then(() => {
-        res.status(200).json({
-            "imageName": req.file.originalname,
-            "imageUrl": output
-        });
 
-        res.end();
+    // use promise so that website doesn't load image before it is uploaded
+    // return new Promise((resolve) => {
+    //     sharp(filepath)
+    //     .jpeg({ mozjpeg: true, quality: 40 })
+    //     .toFile(output, (err, info) => {
+    //         if (err) return resolve(false);
+    //         console.log("here");
+    //         return resolve(info);
+    //     })
+    // }).then(() => {
+        
+    //     res.status(200).json({
+    //         "imageName": req.file.originalname,
+    //         "imageUrl": output
+    //     });
+    // })
+
+    console.log(filepath, output);
+
+    sharp(filepath)
+    .jpeg({mozjpeg: true, quality: 40})
+    .toFile(output)
+    .then(info => {
+        console.log(info);
+        res.status(200).json({
+            "imageName" : req.file.originalname,
+            "imageUrl"  : output
+        })
+    })
+    .catch(err => {
+        console.error(err);
     })
 })
 
@@ -176,57 +192,52 @@ app.get("/download_report", (req, res): void => {
     })
 })
 
-// returns the buttons elements for the webpage to use
-app.get("/buttons.html", (req, res): void => {
-    fs.readFile("../website/elements/buttons.html", (err, data) => {
+const serve_element = (filename: string, filetype: string, req, res) => {
+    fs.readFile(filename, (err, data) => {
         if (err) throw err;
-        res.writeHead(200, { "Content-Type": "text/html" });
+        res.writeHead(200, { "Content-Type": filetype });
         res.write(data);
         res.end();
     })
+}
+
+// returns the buttons elements for the webpage to use
+app.get("/buttons.html", (req, res): void => {
+    serve_element("../website/elements/buttons.html", "text/html", req, res);
 })
 
 // returns the back button element for the webpage to use
 app.get("/back.html", (req, res): void => {
-    fs.readFile("../website/elements/back.html", (err, data) => {
-        if (err) throw err;
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(data);
-        res.end();
-    })
+    serve_element("../website/elements/back.html", "text/html", req, res);
 })
 
 // returns the evidence options elements for the webpage to use
 app.get("/bat_evidence_options.html", (req, res): void => {
-    fs.readFile("../website/elements/bat_evidence_options.html", (err, data) => {
-        if (err) throw err;
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(data);
-        res.end();
-    })
+    serve_element("../website/elements/bat_evidence_options.html", "text/html", req, res);
 })
 
 // returns the options elements for the webpage to use
 app.get("/options.html", (req, res): void => {
-    fs.readFile("../website/elements/options.html", (err, data) => {
-        if (err) throw err;
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(data);
-        res.end();
-    })
+    serve_element("../website/elements/options.html", "text/html", req, res);
 })
 
 app.get("/image_upload.html", (req, res): void => {
-    fs.readFile("../website/elements/image_upload.html", (err, data) => {
-        if (err) throw err;
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(data);
-        res.end();
-    })
+    serve_element("../website/elements/image_upload.html", "text/html", req, res);
 })
 
 // clear the temp image folder on server start
 clear_temp();
+
+const logs = (err, str, req, res) => {
+    console.log(err);
+    console.log(str);
+    console.log(req);
+    console.log(res);
+}
+
+app.use(errorHandler({log: logs}))
+
+
 
 app.listen(port, ():void => {
     console.log("Server listening on port:", port);
