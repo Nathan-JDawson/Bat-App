@@ -34,11 +34,11 @@
                     send_data(array);
                     send_image();
                     if($(this).attr("id") === "button_1"){
-                        window.location.replace("/client_details")
+                        window.location.replace("/site_description")
                     }else if($(this).attr("id") === "button_2"){
                         generate_report();
                     }else if($(this).attr("id") === "button_3"){
-                    window.open('/download_report')
+                        window.open('/download_report')
                     }
                 }
             })
@@ -54,14 +54,17 @@
             const send_image = () => {
                 let fd = new FormData(), file = document.getElementById("upload").files[0];
                 fd.append("upload", file)
+                // needs to be syncronous to upload the image
                 $.ajax({
                     type: "POST",
                     url: "compress_image",
                     data: fd,
+                    async: false,
                     contentType: false,
                     processData: false,
                     success:function(data){
                         console.log(data)
+                        
                     },
                     error:function(err){
                         console.error(err)

@@ -20,7 +20,8 @@ if __name__ == "__main__":
         json_data: Dict = open_json("../node server/data.json")
 
         # import the template doc
-        template = DocxTemplate("../report_gen/simply_ecology_template.docx")
+        template = DocxTemplate("../report_gen/exterior_test.docx")
+        sd = template.new_subdoc()
 
         # takes the filenames from the json file, uses them to create InlineImages
         filenames: List[str] = json_data["filenames"]
@@ -32,8 +33,8 @@ if __name__ == "__main__":
             img = Image.open(path)
             img = img.save(path)
 
-            image = {
-                "image"     : InlineImage(template, path, height=Mm(70)),
+            image: Dict = {
+                "image"     : InlineImage(template, path, height=Mm(60)),
                 "caption"   : json_data["captions"][index]
             }
             

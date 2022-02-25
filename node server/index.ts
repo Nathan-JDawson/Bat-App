@@ -73,6 +73,11 @@ const upload = multer({
 
 // image compression when uploading a file
 app.post("/compress_image", upload.single("upload"), (req, res): void => {
+    let dir = "../report_gen/img"
+
+    // if directory does not exist create it
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir)
+    
     let filepath = req.file.path;
     let output = "../report_gen/img/" + req.file.originalname;
 
@@ -80,6 +85,7 @@ app.post("/compress_image", upload.single("upload"), (req, res): void => {
     .jpeg({mozjpeg: true, quality: 40})
     .toFile(output)
     .then(() => {
+        console.log("here")
         res.status(200).json({
             "imageName" : req.file.originalname,
             "imageUrl"  : output
