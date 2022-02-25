@@ -3,7 +3,7 @@ import traceback
 from docx.shared import Mm # type: ignore
 from docxtpl import DocxTemplate, InlineImage # type: ignore
 import json
-from PIL import Image # type: ignore
+from PIL import Image
 
 def open_json(filename: str) -> Dict:
     with open(filename) as f:
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
             # need to open and resave image - problem with docxtpl and iOS images :/
             img = Image.open(path)
-            img = img.save(path)
+            img.save(path)
 
             image: Dict = {
                 "image"     : InlineImage(template, path, height=Mm(60)),
