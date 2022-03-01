@@ -27,18 +27,6 @@
             }
         });
     })
-
-    let i_num = 0;
-
-    $("#add_more_images").click(() => {
-        i_num += 1;
-        $("#div_0").clone().prop("id", "div_" + i_num).appendTo($("#walls_image_upload")).show();
-    })
-
-    $("#remove_image").click(() => {
-        i_num -= 1;
-        $(".photo_upload").last().remove();
-    })
 </script>
 <style>
     .preview_img{

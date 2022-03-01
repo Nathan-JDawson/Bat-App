@@ -1,0 +1,257 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="stylesheet.css">
+<script>
+    $("#image_upload").load("image_upload.html");
+    $("#bat_wall_evidence_div").load("bat_evidence_options.html");
+
+    $("#walls_toggle").change(function(){
+        console.log($(this).prop("checked"));
+        if($(this).prop("checked"))
+            $("#walls_present").show();
+        else
+            $("#walls_present").hide();
+    })
+
+    // set up validation for the forms - uses jQuery Validate plugin
+    let select_message = "Please select an option"
+    $("#walls_form").validate({
+        debug: true,
+        // will ignore the hidden elements used as templates
+        ignore: ":hidden",
+        rules: {
+            wall_material: {
+                required: true
+            },
+            wall_condition: {
+                required: true
+            },
+            cracks: {
+                required: true
+            },
+            walls_potential: {
+                required: true
+            },
+            bat_wall_evidence: {
+                required: true
+            },
+            bat_species: {
+                // required if evidence type displays species selector
+                required: (element) => {
+                    return $(element).css("display") !== "hidden";
+                }
+            },
+            walls_evidence_amount: {
+                // required if amount num is left blank
+                required: (element) => {
+                    return $(element).parents(".row").find(".walls_evidence_amount_num").val().length === 0
+                }
+            },
+            walls_evidence_amount_num: {
+                // required if amount is left unselected
+                required: (element) => {
+                    return $(element).parents(".row").find(".walls_evidence_amount").val().length === 0
+                }
+            },
+            filename: {
+                required: true
+            },
+            caption: {
+                required: true
+            }
+        },
+        errorPlacement: (error, element) => {
+            if($(element).attr("name") === "wall_material"){
+                error.appendTo("#material_error");
+            }
+            if($(element).attr("name") === "filename"){
+                let error_element = $(element).parents(".photo_upload").find(".filename_error")
+                error.appendTo(error_element);
+            }
+        },
+        messages: {
+            wall_material: {
+                required: "Please check at least one checkbox"
+            },
+            wall_condition: {
+                required: select_message
+            },
+            filename: {
+                required: "Please upload image"
+            }
+        }
+    })
+
+    // adds/removes promts for photos when materials are (un)checked
+    $("#checkboxes").on("change", ":checkbox", function(){
+        let name = $(this).val();
+        if($(this).is(":checked")){
+            let html = `<li id='p_${name}'>Add photo of ${name} wall</li>`;
+            $("#images_promts").append(html);
+        }else
+            $(`#p_${name}`).remove();
+    })
+
+    // add/removes promts for photos when cracks are marked as present
+    $("input[type=radio][name=cracks]").change(function(){
+        $("#p_cracks").remove();
+        if($(this).val() !== "none"){
+            let html = "<li id=p_cracks>Add photo of cracks in walls</li>";
+            $("#images_promts").append(html);
+        }
+    })
+
+    // add prompts based on evidence added
+    $("#bat_wall_evidence_div").on("change", ".bat_wall_evidence", function(){
+        let num = $(this).parents(".add_evidence").attr("id");
+        $(`#p_${num}`).remove();
+        let evidence = $(this).val().replace("_", " ");
+        if(evidence){
+            let html = `<li id='p_${num}'>Add photo of ${evidence} evidence</li>`;
+            $("#images_promts").append(html);
+        }
+    })
+
+    $("#images_promts").on("click", "li", function(){
+        $(this).css("text-decoration", "line-through");
+    })
+</script>
+<form id="walls_form">
+    <div class="row">
+        <div class="col-xs-6">
+            <label>Are walls present?</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <input id="walls_toggle" type="checkbox" name="walls" data-toggle="toggle" data-on="Yes" data-off="No">
+            </div>
+        </div>
+    </div>
+    <div id="walls_present" hidden>
+        <div class="row">
+            <label class="col-xs-12">
+                The walls comprises of...
+            </label>
+        </div>
+        <div id="checkboxes">
+            <div class="row">
+                <div class="checkbox">
+                    <div class="col-xs-3">
+                        <label><input type="checkbox" id="brick" name="wall_material" value="brick">Brick</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label><input type="checkbox" id="stone" name="wall_material" value="stone">Stone</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label><input type="checkbox" id="timber" name="wall_material" value="timber">Timber</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label><input type="checkbox" id="steel" name="wall_material" value="steel">Steel</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="checkbox">
+                    <div class="col-xs-3">
+                        <label><input type="checkbox" id="render" name="wall_material" value="render">Render</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label><input type="checkbox" id="cladding" name="wall_material" value="cladding">Cladding</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label><input type="checkbox" id="block" name="wall_material" value="block">Block</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label><input type="checkbox" id="shiplap" name="wall_material" value="shiplap">Shiplap</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="checkbox">
+                    <div class="col-xs-4">
+                        <label><input type="checkbox" id="hanging tiles" name="wall_material" value="hanging_tiles">Hanging Tiles</label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label><input type="checkbox" id="weatherboarding" name="wall_material" value="weatherboarding">Weatherboarding</label>
+                    </div>
+                    <div class="col-xs-4">
+                        <label><input type="checkbox" id="waney lap" name="wall_material" value="waney_lap">Waney Lap</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="material_error"></div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-xs-12">
+                <select class="form-control" id="wall_condition" name="wall_condition">
+                    <option value="" selected>Overall Condition...</option>
+                    <option value="good">Good</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="poor">Poor</option>
+                </select>
+            </div>
+        </div>
+        <div class="row vcenter">
+            <label class="col-xs-3"></label>
+            <label class="col-xs-2">None</label>
+            <label class="col-xs-2">Some</label>
+            <label class="col-xs-2">Several</label>
+            <label class="col-xs-2">Many</label>
+        </div>
+        <div class="row">
+            <div class="form-group vcenter" id="cracks_select">
+                <label class="col-xs-3">Cracks</label>
+                <div class="col-xs-2">
+                    <input type="radio" class="form-control" name="cracks" value="no" checked>
+                </div>
+                <div class="col-xs-2">
+                    <input type="radio" class="form-control" name="cracks" value="some">
+                </div>
+                <div class="col-xs-2">
+                    <input type="radio" class="form-control" name="cracks" value="several">
+                </div>
+                <div class="col-xs-2">
+                    <input type="radio" class="form-control" name="cracks" value="many">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <label>Evidence of bats found?</label>
+            </div>
+        </div>
+        <div id="bat_wall_evidence_div">
+            <!-- load in evidence elements -->
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <label>Photo Upload (Click list items to cross off)</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <ul id="images_promts"></ul>
+            </div>
+        </div>
+        <!-- Upload photo of evidence, allow caption to be added -->
+        <div id="image_upload"></div>
+        <br>
+        <div class="row">
+            <div class="col-xs-12">
+                <select class="form-control" id="walls_potential" name="walls_potential">
+                    <option value="">Bat Potential...</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                    <option value="negligible">Negligible</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</form>

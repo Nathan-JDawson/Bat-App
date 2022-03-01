@@ -210,6 +210,14 @@ app.get("/image_upload.html", (req, res): void => {
     serve_element("../website/elements/image_upload.html", "text/html", req, res);
 })
 
+app.get("/walls_form.html", (req, res): void => {
+    serve_element("../website/elements/walls_form.html", "text/html", req, res);
+})
+
+app.get("/roof_form.html", (req, res): void => {
+    serve_element("../website/elements/roof_form.html", "text/html", req, res);
+})
+
 // clear the temp image folder on server start
 clear_temp();
 
