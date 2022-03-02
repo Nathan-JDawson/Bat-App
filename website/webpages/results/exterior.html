@@ -145,14 +145,19 @@
             // script needed for evidence tracking
             let e_num = 0;
 
-            $("#add_more_evidence").click(() => {
+            $("#accordion").on("click", ".add_more_evidence", function() {
                 e_num += 1;
-                $("#ev_0").clone().prop("id", "ev_" + e_num).removeClass("template").appendTo($("#whole_section")).show();
+                let section = $(this).parents(".whole_section");
+                console.log($(this).parents());
+                $("#ev_0").clone().prop("id", "ev_" + e_num).removeClass("template").appendTo(section).show();
             })
 
-            $("#remove_evidence").click(() => {
-                e_num -= 1;
-                $(".add_evidence").last().remove();
+            $("#accordion").on("click", ".remove_evidence", function () {
+                let evidence = $(this).parents(".whole_section").find(".add_evidence");
+                if($(evidence).last().prop("id") !== "ev_0"){
+                    e_num -= 1;
+                    $(evidence).last().remove();
+                }
             })
 
             
@@ -226,7 +231,7 @@
                         <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
                     </h3>
                 </div>
-                <div id="walls_collapse" class="panel-collapse collapse in">
+                <div id="walls_collapse" class="panel-collapse collapse">
                     <div class="panel-body">
                         <!-- Load in walls form -->
                         <div id="walls_form_div"></div>
@@ -241,7 +246,7 @@
                         <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
                     </h3>
                 </div>
-                <div id="roof_collapse" class="panel-collapse collapse">
+                <div id="roof_collapse" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <!-- Load in roof form -->
                         <div id="roof_form_div"></div>

@@ -115,7 +115,49 @@
     $("#images_promts").on("click", "li", function(){
         $(this).css("text-decoration", "line-through");
     })
+
+    $("#roof_material").change(function(){
+        $("#tiles_type_div").hide();
+        if($(this).val() === "tiles")
+            $("#tiles_type_div").show();
+    });
+
+    $("#roof_form_select").change(function(){
+        $("#other_form_div").hide();
+        if($(this).val() === "other")
+            $("#other_form_div").show();
+    });
+
+    $("#roof_material").change(function () {
+        $("#other_material_div").hide();
+        if ($(this).val() === "other")
+            $("#other_material_div").show();
+    });
+
+    $("#help_text_form").tooltip({
+        title: "Suggestions:\nFlat\nParapet\nClerestory\nM-Shaped\nButterfly\nBonnet\nDome\nSaltbox",
+        placement: "bottom"
+    });
+
+    $("#help_text_material").tooltip({
+        title: "Suggestions:\nFelt\nAsbestos Sheeting\nGlass\nOnduline\nCorrugated Sheeting\nPVC",
+        placement: "bottom"
+    });
 </script>
+<style>
+    .col-xs-1{
+        padding: 2px;
+    }
+    .col-xs-11{
+        padding-right: 5px;
+    }
+    .glyphicon-question-sign{ 
+        font-size: 25px;
+    }
+    .glyphicon-question-sign:hover{ 
+        color: dodgerblue;
+    }
+</style>
 <form id="roof_form">
     <div class="row">
         <div class="col-xs-12">
@@ -123,68 +165,74 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-sm-12">
             <div class="checkbox">
-                <label><input type="checkbox" id="roof" data-toggle="toggle" data-on="Yes" data-off="No" name="roof"></label>
+                <input type="checkbox" id="roof" data-toggle="toggle" data-on="Yes" data-off="No" name="roof">
             </div>
         </div>
     </div>
     <div id="roof_present" hidden>
         <div class="row">
             <label class="col-xs-12">
-                The roof comprised of...
+                The roof description...
             </label>
         </div>
-        <div id="checkboxes">
-            <div class="row">
-                <div class="checkbox">
-                    <div class="col-xs-3">
-                        <label><input type="checkbox" id="brick" name="roof_material" value="brick">Brick</label>
-                    </div>
-                    <div class="col-xs-3">
-                        <label><input type="checkbox" id="stone" name="roof_material" value="stone">Stone</label>
-                    </div>
-                    <div class="col-xs-3">
-                        <label><input type="checkbox" id="timber" name="roof_material" value="timber">Timber</label>
-                    </div>
-                    <div class="col-xs-3">
-                        <label><input type="checkbox" id="steel" name="roof_material" value="steel">Steel</label>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <select class="form-control" id="roof_form_select" name="roof_form_select">
+                    <option value="" selected>Roof Form...</option>
+                    <option value="lean-to">Lean-to</option>
+                    <option value="mono pitch">Mono Pitch</option>
+                    <option value="gabel end">Gable End</option>
+                    <option value="hipped end">Hipped End</option>
+                    <option value="mansard">Mansard</option>
+                    <option value="gambrel">Gambrel</option>
+                    <option value="conservatory">Conservatory</option>
+                    <option value="other">Other</option>
+                </select>
             </div>
-            <div class="row">
-                <div class="checkbox">
-                    <div class="col-xs-3">
-                        <label><input type="checkbox" id="render" name="roof_material" value="render">Render</label>
-                    </div>
-                    <div class="col-xs-3">
-                        <label><input type="checkbox" id="cladding" name="roof_material" value="cladding">Cladding</label>
-                    </div>
-                    <div class="col-xs-3">
-                        <label><input type="checkbox" id="block" name="roof_material" value="block">Block</label>
-                    </div>
-                    <div class="col-xs-3">
-                        <label><input type="checkbox" id="shiplap" name="roof_material" value="shiplap">Shiplap</label>
-                    </div>
-                </div>
+        </div>
+        <div id="other_form_div" class="row" hidden>
+            <div  class="col-xs-11">
+                <input type="text" class="form-control" id="other_form" name="other_form" placeholder="Other Roof Form...">
             </div>
-            <div class="row">
-                <div class="checkbox">
-                    <div class="col-xs-4">
-                        <label><input type="checkbox" id="hanging tiles" name="roof_material" value="hanging_tiles">Hanging Tiles</label>
-                    </div>
-                    <div class="col-xs-4">
-                        <label><input type="checkbox" id="weatherboarding" name="roof_material" value="weatherboarding">Weatherboarding</label>
-                    </div>
-                    <div class="col-xs-4">
-                        <label><input type="checkbox" id="waney lap" name="roof_material" value="waney_lap">Waney Lap</label>
-                    </div>
-                </div>
+            <div class="col-xs-1">
+                <span id="help_text_form" class="glyphicon glyphicon-question-sign" data-toggle="tooltip"></span>
             </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <div id="material_error"></div>
-                </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <select class="form-control" id="roof_material" name="roof_material">
+                    <option value="" selected>Roof Material...</option>
+                    <option value="tiles">Tiles</option>
+                    <option value="corrugated metal">Corrugated Metal</option>
+                    <option value="thatch">Thatch</option>
+                    <option value="membrane">Membrane</option>
+                    <option value="concrete">Concrete</option>
+                    <option value="timber">Timber</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div id="tiles_type_div" class="col-xs-12" hidden>
+                <select class="form-control" id="tiles_type" name="tiles_type">
+                    <option value="" selected>Tiles Type...</option>
+                    <option value="interlocking">Interlocking</option>
+                    <option value="clay">Clay</option>
+                    <option value="stone">Stone</option>
+                    <option value="concrete">Concrete</option>
+                    <option value="slate">Slate</option>
+                    <option value="shingles">Shingles</option>
+                </select>
+            </div>
+        </div>
+        <div id="other_material_div" class="row" hidden>
+            <div class="col-xs-11">
+                <input type="text" class="form-control" id="other_material" name="other_material" placeholder="Other Roof Material...">
+            </div>
+            <div class="col-xs-1">
+                <span id="help_text_material" class="glyphicon glyphicon-question-sign" data-toggle="tooltip"></span>
             </div>
         </div>
         <br>
@@ -196,30 +244,6 @@
                     <option value="moderate">Moderate</option>
                     <option value="poor">Poor</option>
                 </select>
-            </div>
-        </div>
-        <div class="row vcenter">
-            <label class="col-xs-3"></label>
-            <label class="col-xs-2">None</label>
-            <label class="col-xs-2">Some</label>
-            <label class="col-xs-2">Several</label>
-            <label class="col-xs-2">Many</label>
-        </div>
-        <div class="row">
-            <div class="form-group vcenter" id="cracks_select">
-                <label class="col-xs-3">Cracks</label>
-                <div class="col-xs-2">
-                    <input type="radio" class="form-control" name="cracks" value="no" checked>
-                </div>
-                <div class="col-xs-2">
-                    <input type="radio" class="form-control" name="cracks" value="some">
-                </div>
-                <div class="col-xs-2">
-                    <input type="radio" class="form-control" name="cracks" value="several">
-                </div>
-                <div class="col-xs-2">
-                    <input type="radio" class="form-control" name="cracks" value="many">
-                </div>
             </div>
         </div>
         <div class="row">
