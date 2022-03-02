@@ -3,7 +3,7 @@
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script>
-    $("#image_upload").load("image_upload.html");
+    $(".image_upload_div").load("image_upload.html");
     $("#bat_roof_evidence_div").load("bat_evidence_options.html");
 
     $("input[type=checkbox][name=roof]").change(function(){
@@ -11,7 +11,7 @@
             $("#roof_present").show();
         else
             $("#roof_present").hide();
-    })
+    });
 
     // set up validation for the forms - uses jQuery Validate plugin
     let select_message_roof = "Please select an option"
@@ -265,7 +265,7 @@
             </div>
         </div>
         <!-- Upload photo of evidence, allow caption to be added -->
-        <div id="image_upload"></div>
+        <div class="image_upload_div"></div>
         <br>
         <div class="row">
             <div class="col-xs-12">

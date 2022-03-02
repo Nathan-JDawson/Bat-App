@@ -1,9 +1,9 @@
 <script>
-    $("#walls_image_upload").on("click", ".btn_image", function(){
+    $(".image_upload").on("click", ".btn_image", function(){
         $(this).parents(".photo_upload").find(".image").trigger("click");
     })
 
-    $("#walls_image_upload").on("change", ".image", function(){
+    $(".image_upload").on("change", ".image", function(){
         let fd = new FormData(), file = $(this).prop("files")[0], parents = $(this).parents(".photo_upload");
         fd.append("upload", file);
         $.ajax({
@@ -41,7 +41,7 @@
         z-index: -1;
     }
 </style>
-<div id="walls_image_upload">
+<div class="image_upload">
     <div class="form-group photo_upload" id="div_0" hidden>
         <div class="row">
             <div class="col-xs-3">
@@ -73,12 +73,13 @@
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-xs-6">
-        <button type="button" class="btn btn-success" id="add_more_images">Add Another Image</button>
+    <div class="row">
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-success add_more_images">Add Another Image</button>
+        </div>
+        <div class="col-xs-6">
+            <button type="button" class="btn btn-danger remove_image">Remove Last Image</button>
+        </div>
     </div>
-    <div class="col-xs-6">
-        <button type="button" class="btn btn-danger" id="remove_image">Remove Last Image</button>
-    </div>
+    <br>
 </div>
