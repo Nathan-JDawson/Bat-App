@@ -15,9 +15,19 @@
             $("#buttons").load("buttons.html");
             $("#back_button").load("back.html");
 
+            check_wall = () => {
+                return ($("#walls_form").hasClass("ignore")) ? true : $("#walls_form").valid();
+            }
+
+            check_roof =() => {
+                return ($("#roof_form").hasClass("ignore")) ? true : $("#roof_form").valid();
+            }
+
             // need to use function here rather than => as 'this' is used
             $("#buttons").on("click", ":button", function () {
-                let valid = $("#walls_form").valid();
+                $("#walls_heading").removeClass("error");
+                $("#roof_heading").removeClass("error");
+                let valid = check_wall() & check_roof();
                 if (valid){
                     array = generate_array();
                     console.log(array);
@@ -80,17 +90,17 @@
             }
 
             // create array of evidence objects
-            const generate_evidence = () => {
-                let evidence = $(".add_evidence");
+            const generate_evidence = (section) => {
+                let evidence = $(`#bat_${section}_evidence_div`).find(".add_evidence");
                 let evidence_array = [];
                 evidence.map((index, element) => {
                     if($(element).css("display") !== "none"){
-                        let type = $(element).find(".bat_wall_evidence").val();
-                        let species = $(element).find(".bat_species_wall").val();
-                        let amount = $(element).find(".walls_evidence_amount").val();
+                        let type = $(element).find(".bat_evidence").val();
+                        let species = $(element).find(".bat_species").val();
+                        let amount = $(element).find(".evidence_amount").val();
                         // if amount not selected, use number value instead
                         if(amount.length === 0)
-                            amount = $(element).find(".walls_evidence_amount_num").val();
+                            amount = $(element).find(".evidence_amount_num").val();
                         
                         let evidence_obj = {
                             type    : type,
@@ -109,19 +119,28 @@
             const generate_array = () => {
                 let wall_materials_array = generate_materials();
 
-                let evidence_array = generate_evidence();
+                let wall_evidence_array = generate_evidence("wall");
+                let roof_evidence_array = generate_evidence("roof");
 
                 let filenames_array = generate_filenames();
                 let captions_array = generate_captions();
                 // let images_array = generate_images();
                 
+                // ternary operations - if not other, use value in select, else use other text input
+                let roof_form       = ($("#roof_form_select").val() !== "other") ? $("#roof_form_select").val() : $("#other_form").val();
+                let roof_material   = ($("#roof_material").val() !== "other") ? $("#roof_material").val() : $("#other_material").val();
 
                 let array = {
                         wall_materials  : wall_materials_array,
                         wall_condition  : $("#wall_condition").val(),
                         wall_cracks     : $("input:radio[name=cracks]:checked").val(),
                         wall_potential  : $("#walls_potential").val(),
-                        wall_evidence   : evidence_array,
+                        wall_evidence   : wall_evidence_array,
+                        roof_evidence   : roof_evidence_array,
+                        roof_form       : roof_form,
+                        roof_material   : roof_material,
+                        roof_condition  : $("#roof_condition").val(),
+                        roof_potential  : $("#roof_potential").val(),
                         filenames       : filenames_array,
                         captions        : captions_array
                     };
@@ -226,7 +245,7 @@
             -->
         <div class="panel-group" id="accordion">
             <div class="panel panel-default">
-                <div class="panel-heading">
+                <div id="walls_heading" class="panel-heading">
                     <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#walls_collapse">
                         Walls
                         <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
@@ -241,7 +260,7 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">
+                <div id="roof_heading" class="panel-heading">
                     <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#roof_collapse">
                         Roof
                         <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>

@@ -5,10 +5,13 @@
     $("#bat_wall_evidence_div").load("bat_evidence_options.html");
 
     $("#walls_toggle").change(function(){
-        if($(this).prop("checked"))
+        if($(this).prop("checked")){
             $("#walls_present").show();
-        else
+            $("#walls_form").removeClass("ignore");
+        }else{
             $("#walls_present").hide();
+            $("#walls_form").addClass("ignore");
+        }
     })
 
     // set up validation for the forms - uses jQuery Validate plugin
@@ -16,7 +19,7 @@
     $("#walls_form").validate({
         debug: true,
         // will ignore the hidden elements used as templates
-        ignore: ":hidden",
+        ignore: "",
         rules: {
             wall_material: {
                 required: true
@@ -30,32 +33,38 @@
             walls_potential: {
                 required: true
             },
-            bat_wall_evidence: {
-                required: true
+            bat_evidence: {
+                required: (element) => {
+                    return $(element).parents(".add_evidence").css("display") !== "none";
+                }
             },
             bat_species: {
                 // required if evidence type displays species selector
                 required: (element) => {
-                    return $(element).css("display") !== "hidden";
+                    return $(element).parents(".load_species").css("display") !== "none";
                 }
             },
-            walls_evidence_amount: {
+            evidence_amount: {
                 // required if amount num is left blank
                 required: (element) => {
-                    return $(element).parents(".row").find(".walls_evidence_amount_num").val().length === 0
+                    return $(element).parents(".add_evidence").css("display") !== "none" && $(element).parents(".row").find(".evidence_amount_num").val().length === 0
                 }
             },
-            walls_evidence_amount_num: {
+            evidence_amount_num: {
                 // required if amount is left unselected
                 required: (element) => {
-                    return $(element).parents(".row").find(".walls_evidence_amount").val().length === 0
+                    return $(element).parents(".add_evidence").css("display") !== "none" && $(element).parents(".row").find(".evidence_amount").val().length === 0
                 }
             },
             filename: {
-                required: true
+                required: (element) => {
+                    return $(element).parents(".photo_upload").css("display") !== "none";
+                }
             },
             caption: {
-                required: true
+                required: (element) => {
+                    return $(element).parents(".photo_upload").css("display") !== "none";
+                }
             }
         },
         errorPlacement: (error, element) => {
@@ -77,6 +86,9 @@
             filename: {
                 required: "Please upload image"
             }
+        },
+        invalidHandler: () => {
+            $("#walls_heading").addClass("error");
         }
     })
 
@@ -100,7 +112,7 @@
     })
 
     // add prompts based on evidence added
-    $("#bat_wall_evidence_div").on("change", ".bat_wall_evidence", function(){
+    $("#bat_wall_evidence_div").on("change", ".bat_evidence", function(){
         let num = $(this).parents(".add_evidence").attr("id");
         $(`#p_${num}`).remove();
         let evidence = $(this).val().replace("_", " ");
@@ -114,7 +126,7 @@
         $(this).css("text-decoration", "line-through");
     })
 </script>
-<form id="walls_form">
+<form id="walls_form" class="ignore">
     <div class="row">
         <div class="col-xs-6">
             <label>Are walls present?</label>

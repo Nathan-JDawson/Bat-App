@@ -1,5 +1,5 @@
 <script>
-    $("#whole_section").on("change", ".bat_wall_evidence", function() {
+    $(".whole_section").on("change", ".bat_evidence", function() {
         let species = ["live", "dead", "eDNA"]
         let evidence = $(this).val();
         let parent = $(this).parents(".add_evidence");
@@ -15,7 +15,7 @@
     <div class="add_evidence template" id="ev_0" hidden>
         <div class="row">
             <div class="col-xs-12">
-                <select class="form-control bat_wall_evidence" name="bat_wall_evidence">
+                <select class="form-control bat_evidence" name="bat_evidence">
                     <option value="" selected>Evidence...</option>
                     <option value="live">Live Bats</option>
                     <option value="dead">Dead Bats</option>
@@ -33,7 +33,7 @@
             <div class="col-xs-12">
                 <div class="load_species" hidden>
                     <div id="species">
-                        <select class="form-control bat_species_wall" name="bat_species">
+                        <select class="form-control bat_species" name="bat_species">
                             <option value="" selected>Species...</option>
                             <option value="alcathoe">Alcathoe</option>
                             <option value="barbastelle">Barbastelle</option>
@@ -60,7 +60,7 @@
         </div>
         <div class="row">
             <div class="col-xs-5">
-                <select class="form-control walls_evidence_amount" name="walls_evidence_amount">
+                <select class="form-control evidence_amount" name="evidence_amount">
                     <option value="" selected>Amount...</option>
                     <option value="small">Small</option>
                     <option value="moderate">Moderate</option>
@@ -71,16 +71,16 @@
                 <p class="lead text-center">or</p>
             </div>
             <div class="col-xs-5">
-                <input class="form-control walls_evidence_amount_num" type="number" step="1" min="0" name="walls_evidence_amount_num">
+                <input class="form-control evidence_amount_num" type="number" step="1" min="0" name="evidence_amount_num">
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-6">
-            <button type="button" class="btn btn-success add_more_evidence">Add More Evidence</button>
+            <button type="button" class="btn btn-success btn-block add_more_evidence">Add More Evidence</button>
         </div>
         <div class="col-xs-6">
-            <button type="button" class="btn btn-danger remove_evidence">Remove Last Evidence</button>
+            <button type="button" class="btn btn-danger btn-block remove_evidence">Remove Last Evidence</button>
         </div>
     </div>
     <br>

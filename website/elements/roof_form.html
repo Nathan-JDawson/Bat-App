@@ -7,10 +7,13 @@
     $("#bat_roof_evidence_div").load("bat_evidence_options.html");
 
     $("input[type=checkbox][name=roof]").change(function(){
-        if($(this).prop("checked"))
+        if($(this).prop("checked")){
             $("#roof_present").show();
-        else
+            $("#roof_form").removeClass("ignore");
+        }else{
             $("#roof_present").hide();
+            $("#roof_form").addClass("ignore");
+        }
     });
 
     // set up validation for the forms - uses jQuery Validate plugin
@@ -18,46 +21,67 @@
     $("#roof_form").validate({
         debug: true,
         // will ignore the hidden elements used as templates
-        ignore: ":hidden",
+        ignore: "",
         rules: {
+            roof_form_select: {
+                required: true
+            },
+            other_form: {
+                required: () => {
+                    return $("#roof_form_select").val() === "other";
+                }
+            },
             roof_material: {
                 required: true
             },
-            roof_condition: {
-                required: true
+            other_material: {
+                required: () => {
+                    return $("#roof_material").val() === "other";
+                }
             },
-            cracks: {
+            tiles_type: {
+                required: () => {
+                    return $("#tiles_type").val() === "tiles";
+                }
+            },
+            roof_condition: {
                 required: true
             },
             roof_potential: {
                 required: true
             },
-            bat_roof_evidence: {
-                required: true
+            bat_evidence: {
+                required: (element) => {
+                    return $(element).parents(".add_evidence").css("display") !== "none";
+                }
             },
             bat_species: {
                 // required if evidence type displays species selector
                 required: (element) => {
-                    return $(element).css("display") !== "hidden";
+                    return $(element).parents(".load_species").css("display") !== "none";
                 }
             },
-            roof_evidence_amount: {
+            evidence_amount: {
                 // required if amount num is left blank
                 required: (element) => {
-                    return $(element).parents(".row").find(".roof_evidence_amount_num").val().length === 0
+                    return $(element).parents(".add_evidence").css("display") !== "none" && $(element).parents(".row").find(".evidence_amount_num").val().length === 0
                 }
             },
-            roof_evidence_amount_num: {
+            evidence_amount_num: {
                 // required if amount is left unselected
                 required: (element) => {
-                    return $(element).parents(".row").find(".roof_evidence_amount").val().length === 0
+                    return $(element).parents(".add_evidence").css("display") !== "none" && $(element).parents(".row").find(".evidence_amount").val().length === 0
                 }
             },
             filename: {
-                required: true
+                required: (element) => {
+                    return $(element).parents(".photo_upload").css("display") !== "none";
+                }
             },
             caption: {
-                required: true
+                required: (element) => {
+                    return $(element).parents(".photo_upload").css("display") !== "none";
+                }
             }
         },
         errorPlacement: (error, element) => {
@@ -79,6 +103,9 @@
             filename: {
                 required: "Please upload image"
             }
+        },
+        invalidHandler: () => {
+            $("#roof_heading").addClass("error");
         }
     })
 
@@ -158,7 +185,7 @@
         color: dodgerblue;
     }
 </style>
-<form id="roof_form">
+<form id="roof_form" class="ignore">
     <div class="row">
         <div class="col-xs-12">
             <label>Does the building have a roof?</label>
@@ -264,8 +291,10 @@
                 <ul id="images_promts"></ul>
             </div>
         </div>
-        <!-- Upload photo of evidence, allow caption to be added -->
-        <div class="image_upload_div"></div>
+        
+        <div class="image_upload_div">
+            <!-- Upload photo of evidence, allow caption to be added -->
+        </div>
         <br>
         <div class="row">
             <div class="col-xs-12">
