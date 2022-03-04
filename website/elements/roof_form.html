@@ -41,7 +41,7 @@
             },
             tiles_type: {
                 required: () => {
-                    return $("#tiles_type").val() === "tiles";
+                    return $("#tiles_type").val() === "tile";
                 }
             },
             roof_condition: {
@@ -109,52 +109,78 @@
         }
     })
 
-    // adds/removes promts for photos when materials are (un)checked
-    $("#checkboxes").on("change", ":checkbox", function(){
-        let name = $(this).val();
-        if($(this).is(":checked")){
-            let html = `<li id='p_${name}'>Add photo of ${name} roof</li>`;
-            $("#images_promts").append(html);
-        }else
-            $(`#p_${name}`).remove();
-    })
-
-    // add/removes promts for photos when cracks are marked as present
-    $("input[type=radio][name=cracks]").change(function(){
-        $("#p_cracks").remove();
-        if($(this).val() !== "none"){
-            let html = "<li id=p_cracks>Add photo of cracks in roof</li>";
-            $("#images_promts").append(html);
+    // add iamge prompts for the roof form
+    $("#roof_form_select").on("change", function(){
+        let form = $(this).val();
+        $("#p_roof_form").remove();
+        if(form && form !== "other"){
+            let html = `<li id="p_roof_form">Add photo of ${form} roof</li>`;
+            $("#roof_image_prompts").append(html);
         }
     })
 
-    // add prompts based on evidence added
-    $("#bat_roof_evidence_div").on("change", ".bat_roof_evidence", function(){
+    // add image prompt if the other roof form txt input is used
+    $("#other_form").on("change", function(){
+        let form = $(this).val();
+        $("#p_roof_form").remove();
+        if(form && $(this).css("display") !== "none"){
+            let html = `<li id="p_roof_form">Add photo of ${form} roof</li>`;
+            $("#roof_image_prompts").append(html);
+        }
+    })
+
+    // add image prompt for roof material
+    $("#roof_material").on("change", function(){
+        let material = $(this).val();
+        $("#p_roof_material").remove();
+        if(material && material !== "other"){
+            let html = `<li id="p_roof_material">Add photo of ${material} roof`;
+            $("#roof_image_prompts").append(html);
+        }
+    })
+
+    // add image prompts if the other roof material text input is used
+    $("#other_material").on("change", function(){
+        let material = $(this).val();
+        $("#p_roof_material").remove();
+        if(material && $(this).css("display") !== "none"){
+            let html = `<li id="p_roof_material">Add photo of ${material} roof`;
+            $("#roof_image_prompts").append(html);
+        }
+    })
+
+    // add image prompts based on evidence added
+    $("#bat_roof_evidence_div").on("change", ".bat_evidence", function (){
         let num = $(this).parents(".add_evidence").attr("id");
         $(`#p_${num}`).remove();
-        let evidence = $(this).val().replace("_", " ");
-        if(evidence){
+        let evidence = $(this).val();
+        if(evidence === "live" || evidence === "dead")
+            evidence += " bats";
+        if (evidence){
             let html = `<li id='p_${num}'>Add photo of ${evidence} evidence</li>`;
-            $("#images_promts").append(html);
+            $("#roof_image_prompts").append(html);
         }
     })
 
-    $("#images_promts").on("click", "li", function(){
+    $("#roof_image_prompts").on("click", "li", function(){
         $(this).css("text-decoration", "line-through");
     })
 
+    // show select for tiles type if tiles is selected
     $("#roof_material").change(function(){
         $("#tiles_type_div").hide();
-        if($(this).val() === "tiles")
+        if($(this).val() === "tile")
             $("#tiles_type_div").show();
     });
 
+    // show text input for roof form if other is selected
     $("#roof_form_select").change(function(){
         $("#other_form_div").hide();
         if($(this).val() === "other")
             $("#other_form_div").show();
     });
 
+    // show text input for material if other is selected
     $("#roof_material").change(function () {
         $("#other_material_div").hide();
         if ($(this).val() === "other")
@@ -177,6 +203,9 @@
     }
     .col-xs-11{
         padding-right: 5px;
+    }
+    .col-xs-3{
+        padding-right: 15px ;
     }
     .glyphicon-question-sign{ 
         font-size: 25px;
@@ -231,7 +260,7 @@
             <div class="col-xs-12">
                 <select class="form-control" id="roof_material" name="roof_material">
                     <option value="" selected>Roof Material...</option>
-                    <option value="tiles">Tiles</option>
+                    <option value="tile">Tiles</option>
                     <option value="corrugated metal">Corrugated Metal</option>
                     <option value="thatch">Thatch</option>
                     <option value="membrane">Membrane</option>
@@ -263,6 +292,30 @@
             </div>
         </div>
         <br>
+        <div class="row vcenter">
+            <label class="col-xs-2"></label>
+            <label class="col-xs-2">None</label>
+            <label class="col-xs-2">Some</label>
+            <label class="col-xs-3">Several</label>
+            <label class="col-xs-2">Many</label>
+        </div>
+        <div class="row">
+            <div class="form-group vcenter" id="cracks_select">
+                <label class="col-xs-2">Gaps?</label>
+                <div class="col-xs-2">
+                    <input type="radio" class="form-control" name="gaps" value="no" checked>
+                </div>
+                <div class="col-xs-2">
+                    <input type="radio" class="form-control" name="gaps" value="some">
+                </div>
+                <div class="col-xs-3">
+                    <input type="radio" class="form-control" name="gaps" value="several">
+                </div>
+                <div class="col-xs-2">
+                    <input type="radio" class="form-control" name="gaps" value="many">
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <select class="form-control" id="roof_condition" name="roof_condition">
@@ -288,7 +341,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <ul id="images_promts"></ul>
+                <ul id="roof_image_prompts"></ul>
             </div>
         </div>
         
