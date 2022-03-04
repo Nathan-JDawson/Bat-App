@@ -154,13 +154,13 @@
             // script needed for photo upload
             let i_num = 0;
 
-            $("#accordion").on("click", ".add_more_images", function() {
+            $("#accordion").on("click", ".add_more_images", function(){
                 i_num += 1;
                 let section = $(this).parents(".image_upload");
                 $("#div_0").clone().prop("id", "div_" + i_num).appendTo($(section)).show();
             });
 
-            $("#accordion").on("click", ".remove_image", function() {
+            $("#accordion").on("click", ".remove_image", function(){
                 let image = $(this).parents(".image_upload").find(".photo_upload");
                 if($(image).last().prop("id") !== "div_0"){
                     i_num -= 1;
@@ -171,13 +171,13 @@
             // script needed for evidence tracking
             let e_num = 0;
 
-            $("#accordion").on("click", ".add_more_evidence", function() {
+            $("#accordion").on("click", ".add_more_evidence", function(){
                 e_num += 1;
                 let section = $(this).parents(".whole_section");
                 $("#ev_0").clone().prop("id", "ev_" + e_num).removeClass("template").appendTo(section).show();
             });
 
-            $("#accordion").on("click", ".remove_evidence", function () {
+            $("#accordion").on("click", ".remove_evidence", function (){
                 let evidence = $(this).parents(".whole_section").find(".add_evidence");
                 let id = $(evidence).last().prop("id"); 
                 if(id !== "ev_0"){
@@ -192,10 +192,10 @@
         });
     </script>
     <style>
-        .panel-title[aria-expanded=false] .glyphicon-chevron-up{
+        .panel-title[aria-expanded=false] .glyphicon-menu-up{
             display: none;
         }
-        .panel-title[aria-expanded=true] .glyphicon-chevron-down{
+        .panel-title[aria-expanded=true] .glyphicon-menu-down{
             display: none;
         }
         .panel-heading{
@@ -253,8 +253,8 @@
                 <div id="walls_heading" class="panel-heading">
                     <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#walls_collapse">
                         Walls
-                        <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                        <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                        <span style="float: right;" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                        <span style="float: right;" class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
                     </h3>
                 </div>
                 <div id="walls_collapse" class="panel-collapse collapse">
@@ -268,8 +268,8 @@
                 <div id="roof_heading" class="panel-heading">
                     <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#roof_collapse">
                         Roof
-                        <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                        <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                        <span style="float: right;" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                        <span style="float: right;" class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
                     </h3>
                 </div>
                 <div id="roof_collapse" class="panel-collapse collapse">

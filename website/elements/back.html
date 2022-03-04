@@ -1,13 +1,29 @@
 <div class="row">
     <div class="col-xs-3">
-        <button type="button" id="back" class="btn btn-primary">
-            <span class="glyphicon glyphicon-triangle-left"></span>
+        <button type="button" id="menu" class="btn btn-primary btn-block">
+            <span class="glyphicon glyphicon-home"></span>
             Menu
         </button>
     </div>
+    <div class="col-xs-3">
+        <button type="button" id="back" class="btn btn-primary btn-block">
+            <span class="glyphicon glyphicon-triangle-left"></span>
+            Back
+        </button>
+    </div>
     <script>
-        $("#back").click(() => {
+        $("#menu").click(() => {
             window.location.replace("/");
+        })
+
+        $("#back").click(() => {
+            let name = window.location.pathname;
+            switch(name){
+                case "/exterior":
+                    window.location.replace("/results_menu");
+                default:
+                    alert("Broken link");
+            }
         })
     </script>
 </div>
