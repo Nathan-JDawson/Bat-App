@@ -27,15 +27,15 @@
                         required    : true,
                         postcodeUK  : true
                     },
-                    grid: {
+                    grid_ref: {
                         required    : true,
                         minlength   : 9,
                         maxlength   : 9
                     },
-                    size: "required"
+                    dev_size: "required"
                 },
                 messages: {
-                    grid: {
+                    grid_ref: {
                         minlength: "Must be 8 numbers long",
                         maxlength: "Must be 8 numbers long"
                     }
@@ -62,9 +62,9 @@
                 let array = {
                     "site_name"     : $("#site_name").val(),
                     "site_address"  : $("#address_line_1").val(),
-                    "grid_ref"      : $("#grid").val(),
-                    "dev_size"      : $("#size").val(),
-                    "units"         : $("#size_units").val()
+                    "grid_ref"      : $("#grid_ref").val(),
+                    "dev_size"      : $("#dev_size").val(),
+                    "units"         : $("#units").val()
                 };
 
                 if($("#address_line_2").val())
@@ -77,13 +77,39 @@
                 return array;
             }
 
-            // add space in grid reference after 4 numbers
-            $("#grid").on("keyup", function() {
+            // add space in grid_ref reference after 4 numbers
+            $("#grid_ref").on("keyup", function() {
                 let text = $(this).val().split(" ").join("");
                 if(text.length > 0)
                     text = text.match(new RegExp('.{1,4}', 'g')).join(" ");
                 $(this).val(text); 
             });
+
+            // check if localStore has object with data already
+            const fill_data = (data) => {
+                let check = [
+                    "site_name",
+                    "grid_ref",
+                    "dev_size",
+                    "units"
+                ]
+
+                for(let key in data){
+                    if(check.includes(key) && data[key].length !== 0){
+                        $(`#${key}`).val(data[key]);
+                    }else if(key === "site_address" && data[key] !== 0){
+                        let addresses = data[key].split(", ");
+                        let num = addresses.length;
+                        $("#address_line_1").val(addresses[0]);
+                        $("#address_line_2").val((num === 5) ? address[1] : "");
+                        $("#town").val(addresses[num-3]);
+                        $("#county").val(addresses[num-2]);
+                        $("#postcode").val(addresses[num - 1])
+                    }
+                }
+            }
+
+            fill_data(JSON.parse(localStorage.getItem("report_data")));
         });
     </script>
     </head>
@@ -161,7 +187,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-5">
-                            <input class="form-control" type="text" id="grid" name="grid">
+                            <input class="form-control" type="text" id="grid_ref" name="grid_ref">
                         </div>
                     </div>
                 </div>
@@ -169,10 +195,10 @@
                     <label>Development Size (approx.):</label>
                     <div class="row">
                         <div class="col-xs-3  col-sm-2">
-                            <input class="form-control" type="number" id="size" step=".001" name="size">
+                            <input class="form-control" type="number" id="dev_size" step=".001" name="dev_size">
                         </div>
                         <div class="col-xs-3 col-sm-2">
-                            <select class="form-control" id="size_units" name="units">
+                            <select class="form-control" id="units" name="units">
                                 <option>ha</option>
                                 <option>m&#x00B2;</option>
                             </select>

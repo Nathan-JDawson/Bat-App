@@ -218,6 +218,15 @@ app.get("/roof_form.html", (req, res): void => {
     serve_element("../website/elements/roof_form.html", "text/html", req, res);
 })
 
+app.get("/get_data", (req, res): void => {
+    fs.readFile("./data.json", "utf8", (err, data) => {
+        if (err) throw err;
+        let obj = JSON.parse(data);
+        console.log(obj)
+        res.status(200).json(obj);
+    })
+})
+
 // clear the temp image folder on server start
 clear_temp();
 
