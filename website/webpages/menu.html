@@ -23,19 +23,20 @@
 
             $("#results").click(() => {
                 window.location.replace("/results_menu");
-            })
+            });
 
             $("#load_data").click(() => {
                 // function from functions.js file
                 get_store_JSON();
+                alert("Data loaded and stored");
                 check_progress();
-            })
+            });
 
             $("#clear_data").click(() => {
                 // function from functions.js file
                 clear_localStore();
                 check_progress();
-            })
+            });
 
             const check_progress = () => {
                 let project_details = check_project_details();
@@ -43,7 +44,9 @@
                     $("#project_details").removeClass("btn-primary").addClass("btn-success");
                 else
                     $("#project_details").removeClass("btn-success").addClass("btn-primary");
-            }
+            };
+
+            check_progress();
         })
     </script>
     <style>

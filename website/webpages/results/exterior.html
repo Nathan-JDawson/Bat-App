@@ -188,7 +188,30 @@
             });
 
             $("#walls_form_div").load("walls_form.html");
-            $("#roof_form_div").load("roof_form.html");
+            $("#roof_form_div").load("roof_form.html", () => {
+                fill_data(JSON.parse(localStorage.getItem("report_data")));
+            });
+
+            // check if localStore has object with data already
+            const fill_data = (data) => {
+                let check = [
+                    "wall_condition",
+                    "wall_cracks",
+                    "wall_potential",
+                    "roof_form",
+                    "roof_material",
+                    "roof_condition",
+                    "roof_potential",
+                ]
+
+                for(let key in data){
+                    if(key === "wall_materials" && data[key].length !== 0){
+                        for(let material of data[key]){
+                            $(`input[id = ${material}]`).prop("checked", true);
+                        }
+                    }
+                }
+            }
         });
     </script>
     <style>

@@ -21,6 +21,13 @@
             switch(name){
                 case "/exterior":
                     window.location.replace("/results_menu");
+                    break;
+                case "/client_details":
+                case "/project_proposals":
+                case "/site_description":
+                case "/site_details":
+                    window.location.replace("/");
+                    break;
                 default:
                     alert("Broken link");
             }

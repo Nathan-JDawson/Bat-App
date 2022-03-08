@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <title>Site Details</title>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -97,7 +97,7 @@
                 for(let key in data){
                     if(check.includes(key) && data[key].length !== 0){
                         $(`#${key}`).val(data[key]);
-                    }else if(key === "site_address" && data[key] !== 0){
+                    }else if(key === "site_address" && data[key].length !== 0){
                         let addresses = data[key].split(", ");
                         let num = addresses.length;
                         $("#address_line_1").val(addresses[0]);
@@ -112,103 +112,102 @@
             fill_data(JSON.parse(localStorage.getItem("report_data")));
         });
     </script>
-    </head>
-
-    <body>
-        <div class="container-fluid">
-            <h1 class="text-center">Site Details</h1>
-            <div id="back_button"></div>
-            <!--
-                Values Needed:
-                Site Name
-                Site Address:
-                    Line 1
-                    Line 2
-                    Town
-                    County
-                    Postcode
-                
-                Grid Reference
-                Size
-            -->
-            <form id="site_form" action="">
-                <div class="form-group">
-                    <div class="row">
-                        <label class="col-sm-3">Site Name:</label>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <input class="form-control" type="text" id="site_name" name="name">
-                        </div>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center">Site Details</h1>
+        <div id="back_button"></div>
+        <!--
+            Values Needed:
+            Site Name
+            Site Address:
+                Line 1
+                Line 2
+                Town
+                County
+                Postcode
+            
+            Grid Reference
+            Size
+        -->
+        <form id="site_form" action="">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-sm-3">Site Name:</label>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <input class="form-control" type="text" id="site_name" name="name">
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label>Site Address:</label>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-1">Line 1:</label>
-                        <div class="col-sm-4">
-                            <input class="form-control form-inline" type="text" id="address_line_1" name="line_1">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-1">Line 2:</label>
-                        <div class="col-sm-4">
-                            <input class="form-control form-inline" type="text" id="address_line_2" name="line_2">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-1">Town:</label>
-                        <div class="col-sm-4">
-                            <input class="form-control form-inline" type="text" id="town" name="town">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-1">County:</label>
-                        <div class="col-sm-4">
-                            <input class="form-control form-inline" type="text" id="county" name="county">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-1">Postcode:</label>
-                        <div class="col-sm-4">
-                            <input class="form-control form-inline" type="text" id="postcode" name="postcode">
-                        </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label>Site Address:</label>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <label>Grid Reference:</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <input class="form-control" type="text" id="grid_ref" name="grid_ref">
-                        </div>
+                <div class="form-group row">
+                    <label class="col-sm-1">Line 1:</label>
+                    <div class="col-sm-4">
+                        <input class="form-control form-inline" type="text" id="address_line_1" name="line_1">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Development Size (approx.):</label>
-                    <div class="row">
-                        <div class="col-xs-3  col-sm-2">
-                            <input class="form-control" type="number" id="dev_size" step=".001" name="dev_size">
-                        </div>
-                        <div class="col-xs-3 col-sm-2">
-                            <select class="form-control" id="units" name="units">
-                                <option>ha</option>
-                                <option>m&#x00B2;</option>
-                            </select>
-                        </div>
+                <div class="form-group row">
+                    <label class="col-sm-1">Line 2:</label>
+                    <div class="col-sm-4">
+                        <input class="form-control form-inline" type="text" id="address_line_2" name="line_2">
                     </div>
                 </div>
-                <div class="row" id="buttons">
-                    <!-- buttons.html will be loaded here -->
+                <div class="form-group row">
+                    <label class="col-sm-1">Town:</label>
+                    <div class="col-sm-4">
+                        <input class="form-control form-inline" type="text" id="town" name="town">
+                    </div>
                 </div>
-            </form>
-        </div>
-    </body>
+                <div class="form-group row">
+                    <label class="col-sm-1">County:</label>
+                    <div class="col-sm-4">
+                        <input class="form-control form-inline" type="text" id="county" name="county">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-1">Postcode:</label>
+                    <div class="col-sm-4">
+                        <input class="form-control form-inline" type="text" id="postcode" name="postcode">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label>Grid Reference:</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <input class="form-control" type="text" id="grid_ref" name="grid_ref">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Development Size (approx.):</label>
+                <div class="row">
+                    <div class="col-xs-3  col-sm-2">
+                        <input class="form-control" type="number" id="dev_size" step=".001" name="dev_size">
+                    </div>
+                    <div class="col-xs-3 col-sm-2">
+                        <select class="form-control" id="units" name="units">
+                            <option>ha</option>
+                            <option>m&#x00B2;</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="buttons">
+                <!-- buttons.html will be loaded here -->
+            </div>
+        </form>
+    </div>
+</body>
 </html>

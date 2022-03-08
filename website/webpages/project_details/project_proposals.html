@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <title>Project Proposals</title>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -52,6 +52,7 @@
             }
 
             const send_image = () => {
+                if($("#upload").val().length === 0) return;
                 let fd = new FormData(), file = document.getElementById("upload").files[0];
                 fd.append("upload", file)
                 // needs to be syncronous to upload the image
@@ -75,49 +76,64 @@
             $("#clear").click(() => {
                 $("#upload").val(null);
             })
+
+            // check if localStore has object with data already
+            const fill_data = (data) => {
+                let check = [
+                    "proposals"
+                ]
+
+                for(let key in data){
+                    if(check.includes(key) && data[key].length !== 0){
+                        $(`#${key}`).val(data[key]);
+                    }
+                }
+            }
+
+            fill_data(JSON.parse(localStorage.getItem("report_data")));
         })
     </script>
-    </head>
+</head>
 
-    <body>
-        <div class="container-fluid">
-            <h1 class="text-center">Project Proposals</h1>
-            <div id="back_button"></div>
-            <!--
-                Values Needed:
-                Development Proposals
-                Plan of Developments
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center">Project Proposals</h1>
+        <div id="back_button"></div>
+        <!--
+            Values Needed:
+            Development Proposals
+            Plan of Developments
 
-            -->
-            <form id="proposal_form">
-                <div class="form-group">
-                    <div class="row">
-                        <label class="col-sm-3">Development Proposals:</label>
-                    </div>
-                    <div class="row">
-                        <p class="col-sm-5">The surveys described in this report were commissed to inform...</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <textarea class="form-control" id="proposals" rows=5 name="proposals"></textarea>
-                        </div>
+        -->
+        <form id="proposal_form">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-sm-3">Development Proposals:</label>
+                </div>
+                <div class="row">
+                    <p class="col-sm-5">The surveys described in this report were commissed to inform...</p>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <textarea class="form-control" id="proposals" rows=5 name="proposals"></textarea>
                     </div>
                 </div>
-                <label for="upload">Upload Plan</label>
-                <div class="form-group row">
-                    <div class="col-xs-6 col-sm-4 col-lg-2">
-                        <input type="file" class="control-file" id="upload" name="upload">
-                    </div>
-                    <div class="col-xs-1 col-sm-1 col-lg-1">
-                        <button type="button" class="btn btn-danger" id="clear" name="clear">Clear 
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-                    </div>
+            </div>
+            <label for="upload">Upload Plan</label>
+            <div class="form-group row">
+                <div class="col-xs-6 col-sm-4 col-lg-2">
+                    <input type="file" class="control-file" id="upload" name="upload">
                 </div>
-                <div class="row" id="buttons">
-                    <!-- buttons.html will be loaded here -->
+                <div class="col-xs-1 col-sm-1 col-lg-1">
+                    <button type="button" class="btn btn-danger" id="clear" name="clear">Clear 
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
                 </div>
-            </form>
-        </div>
-    </body>
+            </div>
+            <div class="row" id="buttons">
+                <!-- buttons.html will be loaded here -->
+            </div>
+        </form>
+    </div>
+</body>
 </html>

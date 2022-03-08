@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <title>Site Description</title>
     <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -15,7 +15,7 @@
             $("#buttons").load("buttons.html");
             $("#back_button").load("back.html");
 
-            $("#building_type").change(() => {
+            $("#building_type").on("change", () => {
                 let building = $("#building_type").val().toLowerCase();
                 $("#load_options").load("options.html #" + building);
             })
@@ -33,7 +33,7 @@
                     location1: {
                         required: true
                     },
-                    distance: {
+                    distance_major: {
                         required: true
                     },
                     location2: {
@@ -99,11 +99,12 @@
                     array = generate_array();
                     send_data(array);
                     if($(this).attr("id") === "button_1"){
-                        window.location.replace("/client_details")
+                        alert("Section complete, returning to main menu...");
+                        window.location.replace("/");
                     }else if($(this).attr("id") === "button_2"){
                         generate_report();
                     }else if($(this).attr("id") === "button_3"){
-                        window.open('/download_report')
+                        window.open('/download_report');
                     }
                 }
             })
@@ -111,10 +112,10 @@
             // captures the form into an array/object
             const generate_array = () => {
                 let array = {
-                    site_type       : $("#location_1").val(),
-                    position_1      : $("#location_2").val(),
-                    distance_major  : $("#distance").val(),
-                    position_2      : $("#location_3").val(),
+                    site_type       : $("#site_type").val(),
+                    position_1      : $("#position_1").val(),
+                    distance_major  : $("#distance_major").val(),
+                    position_2      : $("#position_2").val(),
                     major           : $("#major").val(),
 
                     building_name   : $("#building_name").val(),
@@ -143,6 +144,49 @@
             $("#add_another").click(() => {
                 $("#building_single").clone().appendTo("#building_form");
             })
+
+            // check if localStore has object with data already
+            const fill_data = (data) => {
+                let check = [
+                    "site_type",
+                    "position_1",
+                    "distance_major",
+                    "position_2",
+                    "major",
+                    "building_name",
+                    "building_type",
+                    "building_use",
+                    "current_use"
+                ];
+
+                let radio = [
+                    "arable",
+                    "buildings",
+                    "car_parks",
+                    "flowing",
+                    "grassland",
+                    "hardstanding",
+                    "hedgerows",
+                    "pasture",
+                    "railways",
+                    "roads",
+                    "scrubland",
+                    "standing",
+                    "woodland"
+                ];
+                
+                for(let key in data){
+                    if(check.includes(key) && data[key].length !== 0){
+                        $(`#${key}`).val(data[key]);
+                    }else if(radio.includes(key)){
+                        $(`input[name = ${key}][value = ${data[key]}]`).prop("checked", true);
+                    }
+                }
+
+                $("#building_type").trigger("change");
+            }
+
+            fill_data(JSON.parse(localStorage.getItem("report_data")));
         });
     </script>
     <style>
@@ -161,446 +205,445 @@
             display: none;
         }
     </style>
-    </head>
-
-    <body>
-        <div class="container-fluid">
-            <h1 class="text-center">Site Description</h1>
-            <div id="back_button"></div>
-            <!--
-                Values Needed:
-                Location
-                    Description
-                    Land Use
-                Building Type
-                    Name (optional)
-                    Type
-                    Use
-                Habitat
-                    Types on site
-                    Types in surrounding
-                        Woodland
-                        Hedgegrow
-                        Waterbodies
-                Transport
-            -->
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div id="location" class="panel-heading">
-                        <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#location_collapse">
-                            Location
-                            <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                            <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-                        </h3>
-                    </div>
-                    <div id="location_collapse" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <form id="location_form">
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label class="col-sm-3">Location Description:</label>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center">Site Description</h1>
+        <div id="back_button"></div>
+        <!--
+            Values Needed:
+            Location
+                Description
+                Land Use
+            Building Type
+                Name (optional)
+                Type
+                Use
+            Habitat
+                Types on site
+                Types in surrounding
+                    Woodland
+                    Hedgegrow
+                    Waterbodies
+            Transport
+        -->
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div id="location" class="panel-heading">
+                    <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#location_collapse">
+                        Location
+                        <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                        <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                    </h3>
+                </div>
+                <div id="location_collapse" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <form id="location_form">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-sm-3">Location Description:</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <select class="form-control" id="site_type" name="site_type">
+                                            <option value="" selected>Site Type...</option>
+                                            <option value="rural">Rural</option>
+                                            <option value="suburban">Suburban</option>
+                                            <option value="urban">Urban</option>
+                                            <option value="industrial">Industrial</option>
+                                            <option value="commercial">Commercial</option>
+                                        </select>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                            <select class="form-control" id="location_1" name="site_type">
-                                                <option value="" selected>Site Type...</option>
-                                                <option value="rural">Rural</option>
-                                                <option value="suburban">Suburban</option>
-                                                <option value="urban">Urban</option>
-                                                <option value="industrial">Industrial</option>
-                                                <option value="commercial">Commercial</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <input class="form-control" type="text" name="site" placeholder="site" readonly>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <select class="form-control" id="location_2" name="location1">
-                                                <option value="" selected>Location...</option>
-                                                <option value="in">In</option>
-                                                <option value="within">Within</option>
-                                                <option value="close to">Close to</option>
-                                                <option value="adjacent to">Adjacent to</option>
-                                                <option value="on the edge of">Edge of</option>
-                                                <option value="on the outskirts of">Outskirts of</option>
-                                                <option value="in the centre of">Centre of</option>
-                                                <option value="north of">North of</option>
-                                                <option value="east of">East of</option>
-                                                <option value="south of">South of</option>
-                                                <option value="west of">West of</option>
-                                                <option value="north east of">North East of</option>
-                                                <option value="north west of">North West of</option>
-                                                <option value="south east of">South East of</option>
-                                                <option value="south west of">South West of</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input class="form-control" type="text" name="settlement" placeholder="the settlement" readonly>
-                                        </div>
+                                    <div class="col-sm-1">
+                                        <input class="form-control" type="text" name="site" placeholder="site" readonly>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <select class="form-control" id="position_1" name="location1">
+                                            <option value="" selected>Location...</option>
+                                            <option value="in">In</option>
+                                            <option value="within">Within</option>
+                                            <option value="close to">Close to</option>
+                                            <option value="adjacent to">Adjacent to</option>
+                                            <option value="on the edge of">Edge of</option>
+                                            <option value="on the outskirts of">Outskirts of</option>
+                                            <option value="in the centre of">Centre of</option>
+                                            <option value="north of">North of</option>
+                                            <option value="east of">East of</option>
+                                            <option value="south of">South of</option>
+                                            <option value="west of">West of</option>
+                                            <option value="north east of">North East of</option>
+                                            <option value="north west of">North West of</option>
+                                            <option value="south east of">South East of</option>
+                                            <option value="south west of">South West of</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input class="form-control" type="text" name="settlement" placeholder="the settlement" readonly>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <label class="col-sm-3">Geographic Relation:</label>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-sm-3">Geographic Relation:</label>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <input class="form-control" type="number" id="distance_major" step="0.01" name="distance_major" placeholder="Approximately... (km)">
                                     </div>
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                            <input class="form-control" type="number" id="distance" step="0.01" name="distance" placeholder="Approximately... (km)">
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <select class="form-control" name="location2" id="location_3">
-                                                <option value="" selected>Location...</option>
-                                                <option value="north of">North of</option>
-                                                <option value="east of">East of</option>
-                                                <option value="south of">South of</option>
-                                                <option value="west of">West of</option>
-                                                <option value="north east of">North East of</option>
-                                                <option value="north west of">North West of</option>
-                                                <option value="south east of">South East of</option>
-                                                <option value="south west of">South West of</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <input class="form-control" type="text" name="major" id="major" placeholder="Major City/Area...">
-                                        </div>
+                                    <div class="col-sm-2">
+                                        <select class="form-control" name="location2" id="position_2">
+                                            <option value="" selected>Location...</option>
+                                            <option value="north of">North of</option>
+                                            <option value="east of">East of</option>
+                                            <option value="south of">South of</option>
+                                            <option value="west of">West of</option>
+                                            <option value="north east of">North East of</option>
+                                            <option value="north west of">North West of</option>
+                                            <option value="south east of">South East of</option>
+                                            <option value="south west of">South West of</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input class="form-control" type="text" name="major" id="major" placeholder="Major City/Area...">
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div id="building" class="panel-heading">
-                        <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#building_collapse">
-                            Building Type
-                            <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                            <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-                        </h3>
-                    </div>
-                    <div id="building_collapse" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <form id="building_form">
-                                <div id="building_single" class="form-group building">
-                                    <div class="row">
-                                        <label class="col-sm-3">Building Name:</label>
-                                        <div class="col-sm-6">
-                                            <input class="form-control" type="text" name="name" id="building_name">
-                                        </div>
+            </div>
+            <div class="panel panel-default">
+                <div id="building" class="panel-heading">
+                    <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#building_collapse">
+                        Building Type
+                        <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                        <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                    </h3>
+                </div>
+                <div id="building_collapse" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <form id="building_form">
+                            <div id="building_single" class="form-group building">
+                                <div class="row">
+                                    <label class="col-sm-3">Building Name:</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" type="text" name="name" id="building_name">
                                     </div>
-                                    <div class="row">
-                                        <label class="col-sm-3">Building Type:</label>
-                                        <div class="col-sm-6">
-                                            <select class="form-control" name="type" id="building_type">
-                                                <option value="" selected>Type...</option>
-                                                <option value="agricultural">Agricultural</option>
-                                                <option value="civic">Civic</option>
-                                                <option value="commercial">Commercial</option>
-                                                <option value="educational">Educational</option>
-                                                <option value="governmental">Governmental</option>
-                                                <option value="industrial">Industrial</option>
-                                                <option value="medical">Medical</option>
-                                                <option value="parking">Parking</option>
-                                                <option value="religious">Religious</option>
-                                                <option value="residential">Residential</option>
-                                                <option value="transport">Transport</option>
-                                            </select>
-                                        </div>
+                                </div>
+                                <div class="row">
+                                    <label class="col-sm-3">Building Type:</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" name="type" id="building_type">
+                                            <option value="" selected>Type...</option>
+                                            <option value="agricultural">Agricultural</option>
+                                            <option value="civic">Civic</option>
+                                            <option value="commercial">Commercial</option>
+                                            <option value="educational">Educational</option>
+                                            <option value="governmental">Governmental</option>
+                                            <option value="industrial">Industrial</option>
+                                            <option value="medical">Medical</option>
+                                            <option value="parking">Parking</option>
+                                            <option value="religious">Religious</option>
+                                            <option value="residential">Residential</option>
+                                            <option value="transport">Transport</option>
+                                        </select>
+                                    </div>
 
-                                    </div>
-                                    <div class="row">
-                                        <label class="col-sm-3">Building Use:</label>
-                                        <div id="load_options" class="col-sm-6">
-                                            <!-- load options based on what was selected before -->
-                                        </div>
-                                    </div> 
-                                    <div class="row">
-                                        <label class="col-sm-3">Current Use:</label>
-                                        <div class="col-sm-6">
-                                            <select id="current_use" name="current" class="form-control">
-                                                <option value="" selected>Use...</option>
-                                                <option value="occupied">Occupied</option>
-                                                <option value="unoccupied">Unoccupied</option>
-                                                <option value="dissused">Disused</option>
-                                                <option value="derelict">Derelict</option>
-                                                <option value="unknown">Unknown</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <hr class="solid">
                                 </div>
-                            </form>
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <button type="button" class="btn btn-default" id="add_another">Add building</button>
+                                <div class="row">
+                                    <label class="col-sm-3">Building Use:</label>
+                                    <div id="load_options" class="col-sm-6">
+                                        <!-- load options based on what was selected before -->
+                                    </div>
+                                </div> 
+                                <div class="row">
+                                    <label class="col-sm-3">Current Use:</label>
+                                    <div class="col-sm-6">
+                                        <select id="current_use" name="current" class="form-control">
+                                            <option value="" selected>Use...</option>
+                                            <option value="occupied">Occupied</option>
+                                            <option value="unoccupied">Unoccupied</option>
+                                            <option value="dissused">Disused</option>
+                                            <option value="derelict">Derelict</option>
+                                            <option value="unknown">Unknown</option>
+                                        </select>
+                                    </div>
                                 </div>
+                                <hr class="solid">
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-default" id="add_another">Add building</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#habitat_collapse">
-                            Habitat Features
-                            <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-                            <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-                        </h3>
-                    </div>
-                    <div id="habitat_collapse" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <form id="habitat_form">
-                                <p class="lead text-center">On site and in the surrounding areas, how many of these features do you find...</p>
-                                <!-- 
-                                    Features:
-                                    Arable land
-                                    Buildings
-                                    Car Parks
-                                    Flowing Water
-                                    Grassland
-                                    Hardstanding
-                                    Hedgerows
-                                    Pasture
-                                    Railways
-                                    Roads
-                                    Scrubland
-                                    Standing Water
-                                    Woodland
-                                -->
-                                <div class="row vcenter">
-                                    <label class="col-xs-3">Feature</label>
-                                    <label class="col-xs-2">None</label>
-                                    <label class="col-xs-2">Small Areas</label>
-                                    <label class="col-xs-2">Several Areas</label>
-                                    <label class="col-xs-2">Significant Areas</label>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Arable Land</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="arable" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="arable" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="arable" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="arable" value="significant">
-                                        </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title" aria-expanded="false" data-parent="#accordion" data-toggle="collapse" data-target="#habitat_collapse">
+                        Habitat Features
+                        <span style="float: right;" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                        <span style="float: right;" class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                    </h3>
+                </div>
+                <div id="habitat_collapse" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <form id="habitat_form">
+                            <p class="lead text-center">On site and in the surrounding areas, how many of these features do you find...</p>
+                            <!-- 
+                                Features:
+                                Arable land
+                                Buildings
+                                Car Parks
+                                Flowing Water
+                                Grassland
+                                Hardstanding
+                                Hedgerows
+                                Pasture
+                                Railways
+                                Roads
+                                Scrubland
+                                Standing Water
+                                Woodland
+                            -->
+                            <div class="row vcenter">
+                                <label class="col-xs-3">Feature</label>
+                                <label class="col-xs-2">None</label>
+                                <label class="col-xs-2">Small Areas</label>
+                                <label class="col-xs-2">Several Areas</label>
+                                <label class="col-xs-2">Significant Areas</label>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Arable Land</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="arable" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="arable" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="arable" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="arable" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Buildings</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="buildings" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="buildings" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="buildings" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="buildings" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Buildings</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="buildings" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="buildings" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="buildings" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="buildings" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Car Parks</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="car_parks" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="car_parks" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="car_parks" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="car_parks" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Car Parks</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="car_parks" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="car_parks" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="car_parks" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="car_parks" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Flowing Water</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="flowing" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="flowing" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="flowing" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="flowing" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Flowing Water</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="flowing" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="flowing" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="flowing" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="flowing" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Grassland</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="grassland" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="grassland" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="grassland" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="grassland" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Grassland</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="grassland" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="grassland" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="grassland" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="grassland" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Hardstanding</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="hardstanding" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="hardstanding" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="hardstanding" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="hardstanding" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Hardstanding</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="hardstanding" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="hardstanding" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="hardstanding" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="hardstanding" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Hedgerows</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="hedgerows" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="hedgerows" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="hedgerows" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="hedgerows" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Hedgerows</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="hedgerows" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="hedgerows" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="hedgerows" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="hedgerows" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Pasture</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="pasture" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="pasture" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="pasture" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="pasture" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Pasture</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="pasture" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="pasture" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="pasture" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="pasture" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Railways</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="railways" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="railways" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="railways" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="railways" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Railways</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="railways" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="railways" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="railways" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="railways" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Roads</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="roads" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="roads" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="roads" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="roads" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Roads</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="roads" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="roads" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="roads" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="roads" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Scrubland</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="scrubland" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="scrubland" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="scrubland" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="scrubland" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Scrubland</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="scrubland" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="scrubland" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="scrubland" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="scrubland" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Standing Water</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="standing" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="standing" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="standing" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="standing" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Standing Water</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="standing" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="standing" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="standing" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="standing" value="significant">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group vcenter">
-                                        <label class="col-xs-3">Woodland</label>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="woodland" value="none" checked>
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="woodland" value="small">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="woodland" value="several">
-                                        </div>
-                                        <div class="col-xs-2">
-                                            <input type="radio" class="form-control" name="woodland" value="significant">
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group vcenter">
+                                    <label class="col-xs-3">Woodland</label>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="woodland" value="none" checked>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="woodland" value="small">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="woodland" value="several">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <input type="radio" class="form-control" name="woodland" value="significant">
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            <div class="row" id="buttons">
-                <!-- buttons.html will be loaded here -->
-            </div>
         </div>
-    </body>
+        <div class="row" id="buttons">
+            <!-- buttons.html will be loaded here -->
+        </div>
+    </div>
+</body>
 </html>

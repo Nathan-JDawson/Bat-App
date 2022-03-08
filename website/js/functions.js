@@ -29,6 +29,8 @@ const send_data = (array) => {
             console.error(err);
         }
     });
+
+    get_store_JSON();
 };
 
 // get JSON object from the server, store in localStorage
@@ -39,7 +41,6 @@ const get_store_JSON = () => {
         async: false,
         success: (res) => {
             localStorage.setItem("report_data", JSON.stringify(res));
-            alert("Data loaded and stored");
         },
         error: (err) => {
             console.error(err)
