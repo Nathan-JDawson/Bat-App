@@ -1,10 +1,8 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="stylesheet.css">
 <script>
     $(".image_upload_div").load("image_upload.html");
     $("#bat_wall_evidence_div").load("bat_evidence_options.html");
 
-    $("#walls_toggle").change(function(){
+    $("#wall_toggle").change(function(){
         if($(this).prop("checked")){
             $("#walls_present").show();
             $("#walls_form").removeClass("ignore");
@@ -30,7 +28,7 @@
             cracks: {
                 required: true
             },
-            walls_potential: {
+            wall_potential: {
                 required: true
             },
             bat_evidence: {
@@ -137,7 +135,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="checkbox">
-                <input id="walls_toggle" type="checkbox" name="walls" data-toggle="toggle" data-on="Yes" data-off="No">
+                <input id="wall_toggle" type="checkbox" name="walls" data-toggle="toggle" data-on="Yes" data-off="No">
             </div>
         </div>
     </div>
@@ -150,37 +148,33 @@
         <div id="checkboxes">
             <div class="row">
                 <div class="checkbox">
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
                         <label><input type="checkbox" id="brick" name="wall_material" value="brick">Brick</label>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
                         <label><input type="checkbox" id="stone" name="wall_material" value="stone">Stone</label>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
                         <label><input type="checkbox" id="timber" name="wall_material" value="timber">Timber</label>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
                         <label><input type="checkbox" id="steel" name="wall_material" value="steel">Steel</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="checkbox">
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
                         <label><input type="checkbox" id="render" name="wall_material" value="render">Render</label>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
                         <label><input type="checkbox" id="cladding" name="wall_material" value="cladding">Cladding</label>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
                         <label><input type="checkbox" id="block" name="wall_material" value="block">Block</label>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-xs-4">
                         <label><input type="checkbox" id="shiplap" name="wall_material" value="shiplap">Shiplap</label>
                     </div>
                 </div>
-            </div>
-            <div class="row">
                 <div class="checkbox">
                     <div class="col-xs-4">
                         <label><input type="checkbox" id="hanging tiles" name="wall_material" value="hanging_tiles">Hanging Tiles</label>
@@ -257,7 +251,7 @@
         <br>
         <div class="row">
             <div class="col-xs-12">
-                <select class="form-control" id="walls_potential" name="walls_potential">
+                <select class="form-control" id="wall_potential" name="wall_potential">
                     <option value="">Bat Potential...</option>
                     <option value="high">High</option>
                     <option value="medium">Medium</option>

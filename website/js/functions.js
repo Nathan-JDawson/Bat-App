@@ -1,3 +1,10 @@
+// utility function - allows program to 'sleep'
+const sleep = (milli) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, milli);
+    });
+}
+
 // triggers the report generation program
 const generate_report = () => {
     $.ajax({
