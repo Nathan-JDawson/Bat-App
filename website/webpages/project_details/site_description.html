@@ -14,6 +14,7 @@
         jQuery(document).ready(() => {
             $("#buttons").load("buttons.html");
             $("#back_button").load("back.html");
+            $(".icon").load("/bat_icon.html");
 
             $("#building_type").on("change", () => {
                 let building = $("#building_type").val().toLowerCase();
@@ -645,5 +646,6 @@
             <!-- buttons.html will be loaded here -->
         </div>
     </div>
+    <div class="icon"></div>
 </body>
 </html>

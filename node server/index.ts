@@ -13,6 +13,7 @@ import { Application } from "express-serve-static-core";
 app.use(bodyParser.json());
 app.use(favicon("favicon.ico"));
 app.use("/report_gen/img", express.static("../report_gen/img"));
+app.use("/", express.static("./"));
 
 // used to add data to the json file
 app.post("/store_data", (req, res): void => {
@@ -85,7 +86,6 @@ app.post("/compress_image", upload.single("upload"), (req, res): void => {
     .jpeg({mozjpeg: true, quality: 40})
     .toFile(output)
     .then(() => {
-        console.log("here")
         res.status(200).json({
             "imageName" : req.file.originalname,
             "imageUrl"  : output
@@ -225,6 +225,10 @@ app.get("/get_data", (req, res): void => {
         console.log(obj)
         res.status(200).json(obj);
     })
+})
+
+app.get("/bat_icon.html", (req, res): void => {
+    serve_element("../website/elements/bat_icon.html", "text/html", req, res);
 })
 
 // clear the temp image folder on server start

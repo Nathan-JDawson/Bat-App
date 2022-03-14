@@ -24,7 +24,8 @@ if __name__ == "__main__":
         sd = template.new_subdoc()
 
         # takes the filenames from the json file, uses them to create InlineImages
-        filenames: List[str] = json_data["filenames"]
+        filenames: List[str] = json_data["wall_filenames"] + json_data["roof_filenames"]
+        captions: List[str]  = json_data["wall_captions"]  + json_data["roof_captions"]
         images: List = []
         for index, filename in enumerate(filenames):
             path = "../report_gen/img/" + filename
@@ -35,13 +36,13 @@ if __name__ == "__main__":
 
             image: Dict = {
                 "image"     : InlineImage(template, path, height=Mm(60)),
-                "caption"   : json_data["captions"][index]
+                "caption"   : captions[index]
             }
             
             images.append(image)
         #endfor
         
-        json_data["image_external_wall"] = images
+        json_data["image_external"] = images
         print(json_data)
 
         # render new doc

@@ -14,11 +14,7 @@
             processData: false,
             success: function (data) {
                 parents.find(".filename").val(data.imageName);
-                let img = document.createElement("IMG");
-                img.setAttribute("id", "preview_" + data.imageName);
-                img.setAttribute("class", "img-responsive img-rounded preview");
-                img.src = data.imageUrl;
-                img.alt = "image preview";
+                let img = create_image_preview(data);
                 parents.find(".preview_div").html(img);
                 parents.find(".caption_div").show();
             },

@@ -104,3 +104,14 @@ const check_project_details = () => {
     }
     return completed;
 }
+
+// generates the img tag and sets its properties
+const create_image_preview = (data) => {
+    let img = $("<img>", {
+        id: "preview_" + data.imageName,
+        class: "img-responsive img-rounded preview",
+        src: data.imageUrl,
+        alt: "image preview"
+    });
+    return img;
+}

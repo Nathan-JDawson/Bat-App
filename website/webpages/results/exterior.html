@@ -16,12 +16,13 @@
         jQuery(document).ready(() => {
             $("#buttons").load("buttons.html");
             $("#back_button").load("back.html");
+            $(".icon").load("bat_icon.html");
 
-            check_wall = () => {
+            const check_wall = () => {
                 return ($("#walls_form").hasClass("ignore")) ? true : $("#walls_form").valid();
             }
 
-            check_roof =() => {
+            const check_roof = () => {
                 return ($("#roof_form").hasClass("ignore")) ? true : $("#roof_form").valid();
             }
 
@@ -44,9 +45,9 @@
                 }
             })
 
-            const generate_images = () => {
+            const generate_images = (section) => {
                 // select all image elements - put src in array
-                let images = $(".preview");
+                let images = $(`#${section}_image_upload_div`).find(".preview");
                 let images_array = [];
                 images.map((index, element) => {
                     if($(element).attr("src"))
@@ -56,9 +57,9 @@
                 return images_array;
             }
 
-            const generate_filenames = () => {
+            const generate_filenames = (section) => {
                 // select all filename elements - put in array
-                let filenames = $(".filename");
+                let filenames = $(`#${section}_image_upload_div`).find(".filename");
                 let filenames_array = [];
                 filenames.map((index, element) => {
                     if($(element).val())
@@ -68,9 +69,9 @@
                 return filenames_array;
             }
 
-            const generate_captions = () => {
+            const generate_captions = (section) => {
                 // select all caption elements - put in array
-                let captions = $(".caption");
+                let captions = $(`#${section}_image_upload_div`).find(".caption");
                 let captions_array = [];
                 captions.map((index, element) => {
                     if($(element).val())
@@ -124,8 +125,11 @@
                 let wall_evidence_array = generate_evidence("wall");
                 let roof_evidence_array = generate_evidence("roof");
 
-                let filenames_array = generate_filenames();
-                let captions_array = generate_captions();
+                let wall_filenames_array = generate_filenames("wall");
+                let wall_captions_array = generate_captions("wall");
+
+                let roof_filenames_array = generate_filenames("roof");
+                let roof_captions_array = generate_captions("roof");
                 // let images_array = generate_images();
                 
                 // ternary operations - if not other, use value in select, else use other text input
@@ -146,8 +150,10 @@
                         roof_gaps       : ($("#roof_present").css("display") !== "none") ? $("input:radio[name=gaps]:checked").val() : "",
                         roof_condition  : $("#roof_condition").val(),
                         roof_potential  : $("#roof_potential").val(),
-                        filenames       : filenames_array,
-                        captions        : captions_array
+                        wall_filenames  : wall_filenames_array,
+                        wall_captions   : wall_captions_array,
+                        roof_filenames  : roof_filenames_array,
+                        roof_captions   : roof_captions_array
                     };
 
                 return array;
@@ -218,6 +224,19 @@
                 }
             }
 
+            const fill_images = (form, data, key) => {
+                for(let index in data[key]){
+                    let image = data[key][index];
+                    let parent = $(`#${form}_image_upload_div`);
+                    $(parent).find(".add_more_images").trigger("click");
+                    let img = create_image_preview({imageName: image, imageUrl: `../report_gen/img/${image}`});
+                    $(parent).find(".filename").last().val(image);
+                    $(parent).find(".preview_div").last().html(img);
+                    $(parent).find(".caption_div").last().show();
+                    $(parent).find(".caption").last().val(data[`${form}_captions`][index])
+                }
+            }
+
             // check if localStore has object with data already
             const fill_data = async (data) => {
                 let check = [
@@ -237,26 +256,42 @@
                     toggle_form("roof", data, key);
 
                     if(data[key].length !== 0){
-                        if(key === "wall_materials"){
-                            for(let material of data[key]){
-                                $(`input[id = ${material}]`).prop("checked", true);
-                            }
-                        }else if(key === "wall_cracks"){
-                            $(`input[name = cracks][value = ${data[key]}`).prop("checked", true);
-                        }else if(key === "roof_gaps"){
-                            $(`input[name = gaps][value = ${data[key]}]`).prop("checked", true);
-                        }else if(key === "wall_evidence"){
-                            fill_evidence("wall", data, key);
-                        }else if(key === "roof_evidence"){
-                            fill_evidence("roof", data, key);
-                        }else if(key === "roof_form"){
-                            $("#roof_form_select").val(data[key]);
-                        }else if(check.includes(key)){
-                            $(`#${key}`).val(data[key]);
-                            if(data[key].includes("tiles")){
-                                $("#roof_material").val("tiles").trigger("change");
-                                $("#tiles_type").val(data[key].split(" ")[0]);
-                            }
+                        switch(key){
+                            case "wall_materials":
+                                for(let material of data[key]){
+                                    $(`input[id = ${material}]`).prop("checked", true);
+                                }
+                                break;
+                            case "wall_cracks":
+                                $(`input[name = cracks][value = ${data[key]}]`).prop("checked", true);
+                                break;
+                            case "roof_gaps":
+                                $(`input[name = gaps][value = ${data[key]}]`).prop("checked", true);
+                                break;
+                            case "wall_evidence":
+                                fill_evidence("wall", data, key);
+                                break;
+                            case "roof_evidence":
+                                fill_evidence("roof", data, key);
+                                break;
+                            case "roof_form":
+                                $("#roof_form_select").val(data[key]);
+                                break;
+                            case "wall_filenames":
+                                fill_images("wall", data, key);
+                                break;
+                            case "roof_filenames":
+                                fill_images("roof", data, key);
+                                break;
+                            default:
+                                if(check.includes(key)){
+                                    $(`#${key}`).val(data[key]);
+                                    if(data[key].includes("tiles")){
+                                        $("#roof_material").val("tiles").trigger("change");
+                                        $("#tiles_type").val(data[key].split(" ")[0]);
+                                    }
+                                }
+                                break;
                         }
                     }
                 }
@@ -357,4 +392,5 @@
         </div>
     </div>
 </body>
+<div class="icon"></div>
 </html>
