@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Menu</title>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.js"></script>
+    <script type="text/javascript" src="functions.js"></script>
+    <script>
+        jQuery(document).ready(() => {
+            localStorage.clear();
+            
+            $("#load").on("click", () => {
+                $.ajax({
+                    url: "show_data",
+                    type: "GET",
+                    async: false,
+                    success:(res) =>{
+                        console.log("server response is:", res);
+                        res.forEach(element => {
+                            $("#data_file").append($("<option>",{
+                                value: element,
+                                text: element
+                            }))
+                        });
+                    },
+                    error:(err) => {
+                        console.error(err);
+                    }
+                });
+            })
+        })
+    </script>
+    <style>
+        .btn{
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center">Data Select</h1>
+        <div class="row">
+            <div class="col-xs-12">
+                <button type="button" id="load" class="btn btn-primary btn-block">Load Report Data</button>
+            </div>
+        </div>
+        <div id="data_select">
+            <div class="row">
+                <div class="col-xs-12">
+                    <select id="data_file" class="form-control">
+                        <!-- Load in data from the server -->
+                        <option value="" selected></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-xs-12">
+                <button type="button" id="create" class="btn btn-primary btn-block">Start New Report</button>
+            </div>
+        </div>
+    </div>
+    <div class="icon"></div>
+</body>
+</html>
