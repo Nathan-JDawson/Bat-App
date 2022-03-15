@@ -68,6 +68,15 @@ app.get("/gen_report", (req, res): void => {
     });
 })
 
+// sends the content of the report_data file to the client
+app.get("/show_data", (req, res): void => {
+    const folder: string = "report_data";
+    fs.readdir(folder, (err, files) => {
+        if (err) throw err;
+        res.send(files);
+    })
+})
+
 const upload = multer({
     dest: "temp/"
 });
@@ -145,8 +154,12 @@ app.get("/exterior", (req, res): void => {
     display_html("../website/webpages/results/exterior.html", req, res);
 })
 
-app.get("/", (req, res): void => {
+app.get("/menu", (req, res): void => {
     display_html("../website/webpages/menu.html", req, res);
+})
+
+app.get("/", (req, res): void => {
+    display_html("../website/webpages/data_select.html", req, res);
 })
 
 // returns the js file for the webpage to use
